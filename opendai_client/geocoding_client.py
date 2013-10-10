@@ -55,7 +55,7 @@ class GeoCoding(object):
             
             # Storing Cache 
             if place != None: 
-                logging.debug( "Storing Place on DB: " + str(place)) 
+                logging.debug( "Storing Place on DB: " + unicode(place)) 
                 geoResolved = GeoResolve(address=address , place=place , lat=lat , lng=lng)
                 try:
                     geoResolved.save()
