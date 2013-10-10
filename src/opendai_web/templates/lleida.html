@@ -1,0 +1,414 @@
+{% extends "base.html" %}
+
+{% block load %}{% load leaflet_tags %}{% endblock %}
+
+{% block head %}
+	{% leaflet_js plugins="ALL" %}
+    {% leaflet_css plugins="ALL" %}
+    
+<link rel="stylesheet" href="../static/media/bootstrap/css/bootstrap.min.css">
+<link rel="stylesheet" href="../static/media/font-awesome/css/font-awesome.min.css">
+
+<!--TODO add pluguin-->
+<script src="http://code.jquery.com/jquery-1.10.1.min.js" type="application/javascript"></script>
+    
+<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css">
+<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/plugins/themes/base/jquery.ui.selectmenu.css">
+
+<script src="../static/media/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js" type="application/javascript"></script>
+<script src="../static/media/jquery-ui-1.10.3.custom/plugins/ui/jquery.ui.selectmenu.js" type="application/javascript"></script>   
+    
+<style>	
+	body {
+		padding: 0;
+		margin: 0;
+	}
+	html, body, #map {
+		height: 100%;
+	}
+	
+	.info {
+    padding: 6px 8px;
+    font: 14px/16px Arial, Helvetica, sans-serif;
+    background: white;
+    background: rgba(255,255,255,0.8);
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    border-radius: 5px;
+	}
+	.info h4 {
+	    margin: 0 0 5px;
+	    color: #777;
+	}
+
+	.menu {
+		width: 400px;
+	}
+	
+	.legend {
+		line-height: 18px;
+		color: #555;
+	}
+	
+	.legend i {
+		width: 18px;
+		height: 18px;
+		float: left;
+		margin-right: 8px;
+		opacity: 0.7;
+	}
+</style>
+
+{% endblock %}
+
+{% block title %}Lleida{% endblock %}
+
+
+{% block body %}
+
+	{% leaflet_map "map" %}
+	
+	<script type="text/javascript">
+	
+	    function mapInit(map, bounds) {
+	    	
+		    var minimal_style = 22677,
+		    	normal_style = 997,
+		    	midnight_style = 999;
+	    
+		    var	base_key = 'BC9A493B41014CAABB98F0471D759707'
+		     	kram_key = '32186e05680a4c8dacc22302bc6265c1';
+	    
+		    var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png',
+		    	cloudmadeAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
+		
+			var minimal = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: minimal_style, attribution: cloudmadeAttribution}),
+				normal = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: normal_style, attribution: cloudmadeAttribution}),
+				midnight  = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: midnight_style,   attribution: cloudmadeAttribution});
+		
+			map.setView([41.6175899, 0.6200146], 14);
+			map.addLayer(normal);
+			
+	    	// colors
+			function getColor(d) {
+			    return d > 1000 * 100 ? '#800026' :
+			           d > 500 * 100  ? '#BD0026' :
+			           d > 200 * 100  ? '#E31A1C' :
+			           d > 100 * 100  ? '#FC4E2A' :
+			           d > 50 * 100   ? '#FD8D3C' :
+			           d > 20 * 100   ? '#FEB24C' :
+			           d > 10 * 100   ? '#FED976' :
+			                      		'#FFEDA0';
+			}
+		
+			function style(feature) {
+			    return {
+			        fillColor: getColor(feature.properties.Homes),
+			        weight: 2,
+			        opacity: 1,
+			        color: 'white',
+			        dashArray: '3',
+			        fillOpacity: 0.7
+			    };
+			}
+	    
+	    // controls
+		var baseMaps = {
+		    "Minimal": minimal,
+		    "Normal": normal,
+		    "Night View": midnight
+		};
+		
+		// Layers
+		var controlLayer = L.control.layers(baseMaps,null, {collapsed:false});
+		controlLayer.addTo(map);
+		
+		    // Pois Layer
+		   	var poisMarker = L.AwesomeMarkers.icon({
+			  icon: 'star', 
+			  color: 'purple'
+			})
+			
+		   	var pois_array = [];
+		   	var poiss = L.layerGroup(pois_array);
+		   	map.addLayer(poiss);
+			controlLayer.addOverlay(poiss, "Pois");
+		
+			$.ajax({
+				type: "GET",
+				url: "pois/1/",
+				success: function(data){
+					
+					poiss.clearLayers()
+			
+					for (var i=0; i < data.length; i++) {
+						pois_data = data[i];
+						if(pois_data.geo.lat != null){
+							pois_point = L.marker([pois_data.geo.lat, pois_data.geo.lng], {icon: poisMarker}).bindPopup(pois_data.name).on('mouseover',overMarker);
+							pois_point.addTo(poiss);
+						}
+					};
+					
+			
+				},
+				error: function(jqXHR, textStatus, error){
+					console.log(error);
+				}
+			}); 		
+		
+			function change_poi_category(id){
+				
+				$.ajax({
+				type: "GET",
+				url: "pois/" + id,
+				success: function(data){
+					
+					poiss.clearLayers()
+			
+					for (var i=0; i < data.length; i++) {
+						pois_data = data[i];
+						if(pois_data.geo.lat != null){
+							pois_point = L.marker([pois_data.geo.lat, pois_data.geo.lng], {icon: poisMarker}).bindPopup(pois_data.name).on('mouseover',overMarker);
+							pois_point.addTo(poiss);
+						}
+					};
+					
+				},
+				error: function(jqXHR, textStatus, error){
+					console.log(error);
+				}
+				}); 
+			}
+		
+		    // Bustop Layer
+		   	var bustopMarker = L.AwesomeMarkers.icon({
+			  icon: 'flag', 
+			  color: 'blue'
+			})
+			
+		   	var bustop_array = [];
+		
+			$.ajax({
+				type: "GET",
+				url: "bustop/all",
+				success: function(data){
+			
+					for (var i=0; i < data.length; i++) {
+						bustop_data = data[i];
+						if(bustop_data.geo.lat != null){
+							bustop_point = L.marker([bustop_data.geo.lat, bustop_data.geo.lng], {icon: bustopMarker}).bindPopup(bustop_data.name).on('mouseover',overMarker);
+							bustop_array.push(bustop_point);
+						}
+					};
+					
+					var bustops = L.layerGroup(bustop_array);
+					    
+					map.addLayer(bustops);
+					controlLayer.addOverlay(bustops, "Parades de Bus");
+			
+				},
+				error: function(jqXHR, textStatus, error){
+					console.log(error);
+				}
+			}); 
+		    
+		    
+		    // Alert Layer
+		    var redMarker = L.AwesomeMarkers.icon({
+			  icon: 'bolt', 
+			  color: 'red'
+			})
+		    
+		    var alerts_array = [];
+		
+			$.ajax({
+				type: "GET",
+				url: "alert/" + "2/",
+				success: function(data){
+			
+					for (var i=0; i < data.length; i++) {
+						alert_data = data[i];
+						if(alert_data.geo.lat != null){
+							alert_point = L.marker([alert_data.geo.lat, alert_data.geo.lng], {icon: redMarker}).bindPopup(alert_data.category).on('mouseover',overMarker);
+							alerts_array.push(alert_point);
+						}
+					};
+					
+					//console.log(alerts_array)
+					var alerts = L.layerGroup(alerts_array);
+					    
+					map.addLayer(alerts);
+					controlLayer.addOverlay(alerts, "Alertes");
+			
+				},
+				error: function(jqXHR, textStatus, error){
+					console.log(error);
+				}
+			});  
+			
+			// Lines Layer
+			$.ajax({
+				type: "GET",
+				url: "buslines.geojson",
+				success: function(buslines_geojson, textStatus, jqXHR){
+					
+	            var geoJsonLayer =  new L.geoJson(buslines_geojson,
+	            	{style: function(feature) {
+				        switch (feature.properties.bus_line) {
+				            case 'L10': return {color: "#ff0000"};
+				            case 'L9':   return {color: "#FF8000"};
+				            case 'L8':   return {color: "#FFFF00"};
+				            case 'L7':   return {color: "#00FF00"};
+				            case 'L6':   return {color: "#00FFFF"};
+				            case 'L5':   return {color: "#0080FF"};
+				            case 'L4':   return {color: "#0000FF"};
+				            case 'L3':   return {color: "#8000FF"};
+				            case 'L2':   return {color: "#FF00FF"};
+				            case 'L1':   return {color: "#000000"};
+				        }
+				    	},onEachFeature: function(feature, layer){
+	            			layer.bindPopup('District: ' + feature.properties.bus_line);
+	            		}	
+				    });
+	            
+	            controlLayer.addOverlay(geoJsonLayer, "Bus Lines");
+					
+				},
+				error: function(jqXHR, textStatus, error){
+					console.log(error);
+				}
+			});
+			
+			// Interacction
+			
+			function overMarker(evt) {
+				var marker = evt.target;
+				info.update(marker);
+			}
+			
+			// Overlays
+			
+			var info = L.control();
+
+			info.onAdd = function (map) {
+			    this._div = L.DomUtil.create('div', 'info'); // create a div with a class "info"
+			    this.update();
+			    return this._div;
+			};
+			
+			// method that we will use to update the control based on feature properties passed
+			info.update = function (props) {
+			    this._div.innerHTML = '<h4>Alert Type</h4>' +  (props ?
+			        '<b>' + props._popup._content + '</b>'
+			        : 'Hover point');
+			};
+			
+			info.addTo(map);
+	
+			// Menu Overlay
+			
+			
+			var menu = L.control({position: 'topleft'});
+			
+			menu.onAdd = function (map) {
+
+		    	this._div = L.DomUtil.create('div', 'info menu');
+		    	this._div.innerHTML += "<div id='accordion'>"
+		    	+ "<h3>POIs</h3><div id='menu-pois'></div>"
+		    	+ "<h3>Bus</h3><div id='menu-bus'></div>"
+		    	+ "<h3>Alertes</h3><div id='menu-alert'></div>"
+		    	+ "</div>";
+
+		    	this.update();
+		        //div.innerHTML += "<div style='background-color:orange;height:300px;width:100px;'>This div has height and width applied.</div>";
+		
+		    	return this._div;
+			};
+			
+			// HACK to disable the mouse control to the map over the menu
+			//Functions to ei'her disable (onmouseover) or enable (onmouseout) the map's dragging
+			function controlEnter(e) {
+			    map.dragging.disable();
+			}
+			function controlLeave() {
+			    map.dragging.enable();
+			}
+
+			// Fuction to add content on the menu
+			menu.update = function (props) {
+						
+				var div = $(this._div);		    
+		    	var accordion = div.children();
+		    	accordion.accordion({heightStyle: "content"});
+		    	
+		    	var menu_pois = div.find('#menu-pois');
+		    			    	
+				$.ajax({
+					type: "GET",
+					url: "pois/category/all",
+					success: function(data){
+				
+						var selectHTML = "<select name='speedA' id='pois-categories'>";
+					
+						for (var i=0; i < data.length; i++) {
+							element = data[i];
+							var option = "<option value='" +element.id+ "'>" +element.category+ "</option>";
+							selectHTML += option;
+				
+						};
+						
+						selectHTML += "</select>";
+						selectHTML += "<input id='b-pois' type='submit' value='View'/>";
+						menu_pois.append(selectHTML);
+						menu_pois.find('#b-pois').button().click(function( event ) {
+							change_poi_category($('#pois-categories option:selected').val());
+							});
+				
+					},
+					error: function(jqXHR, textStatus, error){
+						console.log(error);
+					}
+				}); 
+				
+		    	var menu_bus = div.find('#menu-bus');
+		    	
+
+				var selectmenu = menu_bus.find('#speedA');
+				//selectmenu.selectmenu({style:'popup'})
+		    	
+		    	var menu_alert = div.find('#menu-alert');
+		    	menu_alert.append("<input type='text' name='name' id='name' class='text ui-widget-content ui-corner-all' />");
+		    	
+		    	
+		    	//Quick application of event handlers to overall control
+		    	accordion.mouseover(controlEnter);
+		    	accordion.mouseout(controlLeave);
+				
+			};
+			
+			menu.addTo(map);	
+			
+		// Llegenda
+			var legend = L.control({position: 'bottomright'});
+			
+			legend.onAdd = function (map) {
+
+		    var div = L.DomUtil.create('div', 'info legend'),
+		        grades = [0, 10, 20, 50, 100, 200, 500, 1000],
+		        labels = [];
+		
+		    // loop through our density intervals and generate a label with a colored square for each interval
+		    for (var i = 0; i < grades.length; i++) {
+		        div.innerHTML +=
+		            '<i style="background:' + getColor(grades[i] + 1) + '"></i> ' +
+		            grades[i] + (grades[i + 1] ? '&ndash;' + grades[i + 1] + '<br>' : '+');
+		    }
+		
+		    return div;
+			};
+			
+			//legend.addTo(map);
+			
+	    }// end MapInit
+	</script>
+	
+{% endblock %}

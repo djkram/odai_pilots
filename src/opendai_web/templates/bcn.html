@@ -1,0 +1,222 @@
+{% extends "base.html" %}
+
+{% block title %}BCN{% endblock %}
+
+{% block head %}
+	
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+    
+    <style>
+		body {
+			padding: 0;
+			margin: 0;
+		}
+		html, body, #map {
+			height: 100%;
+		}
+		.info {
+			padding: 6px 8px;
+			font: 14px/16px Arial, Helvetica, sans-serif;
+			background: white;
+			background: rgba(255,255,255,0.8);
+			box-shadow: 0 0 15px rgba(0,0,0,0.2);
+			border-radius: 5px;
+		}
+		.info h4 {
+			margin: 0 0 5px;
+			color: #777;
+		}
+		.menu {
+			width: 400px;
+		}
+		.legend {
+			line-height: 18px;
+			color: #555;
+		}
+		.legend i {
+			width: 18px;
+			height: 18px;
+			float: left;
+			margin-right: 8px;
+			opacity: 0.7;
+		}
+	</style>
+	
+	<script src="http://code.jquery.com/jquery-1.10.1.min.js" type="application/javascript"></script>
+    
+{% endblock %}
+
+{% block body %}
+
+
+	
+	<div id="map"></div>
+	
+	<script type="text/javascript">
+	
+		// punts
+		var punt1 = L.marker([41.3850639, 2.1734035]).bindPopup('Punt 1');
+	    var punt2 = L.marker([41.41338061238166, 2.198638916015625]).bindPopup('Punt 2');
+	    var punts = L.layerGroup([punt1, punt2]);
+	    
+	    var minimal_style = 22677,
+	    	normal_style = 997,
+	    	midnight_style = 999;
+	    
+	    var	base_key = 'BC9A493B41014CAABB98F0471D759707'
+	     	kram_key = '32186e05680a4c8dacc22302bc6265c1';
+	    
+	    var cloudmadeUrl = 'http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png',
+	    	cloudmadeAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>';
+		
+		var minimal = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: minimal_style, attribution: cloudmadeAttribution}),
+			normal = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: normal_style, attribution: cloudmadeAttribution}),
+			midnight  = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: midnight_style,   attribution: cloudmadeAttribution});
+		
+		var map = L.map('map', {
+			    center: new L.LatLng(41.3850639, 2.1734035),
+    			zoom: 12,
+    			layers: [minimal, punts]
+			
+		});
+		
+		
+		/*
+		var map = L.map('map').setView([41.3850639, 2.1734035], 12);
+		
+		L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
+			maxZoom: 18,
+			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
+		}).addTo(map);
+		*/
+		
+		/*
+		var map = L.map('map').setView([41.40239928924455,2.1941958212409003], 13);
+
+	    L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
+	        key: '32186e05680a4c8dacc22302bc6265c1',
+	        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
+	        maxZoom: 18,
+	        styleId: 98834
+	    }).addTo(map);
+	    */
+	    
+	    // colors
+	    /*
+		function getColor(d) {
+		    return d > 1000 * 100 ? '#800026' :
+		           d > 500 * 100  ? '#BD0026' :
+		           d > 200 * 100  ? '#E31A1C' :
+		           d > 100 * 100  ? '#FC4E2A' :
+		           d > 50 * 100   ? '#FD8D3C' :
+		           d > 20 * 100   ? '#FEB24C' :
+		           d > 10 * 100   ? '#FED976' :
+		                      		'#FFEDA0';
+		}
+		*/
+		function getColor(d) {
+		    return d >= 2 ? '#800026' :
+		           d >= 1 ? '#FC4E2A' :
+		                    '#FFEDA0' ;
+		}
+		
+		function style(feature) {
+		    return {
+		        fillColor: getColor(feature.properties.Pollution.alert),
+		        weight: 2,
+		        opacity: 1,
+		        color: 'white',
+		        dashArray: '3',
+		        fillOpacity: 0.7
+		    };
+		}
+		
+	    // controls
+		var baseMaps = {
+		    "Minimal": minimal,
+		    "Normal": normal,
+		    "Night View": midnight
+		};
+		
+		var overlayMaps = {
+		    "Punts": punts
+		};
+		
+		var controlLayer = L.control.layers(baseMaps, overlayMaps);
+		controlLayer.addTo(map);
+		
+		var neighborhoods = [];
+		var geoJsonLayer;
+
+	    $.ajax({
+	        type: "GET",
+	        url: "bcn.geojson",
+	        success: function(bcnMap, textStatus, jqXHR){
+	        	
+	            var features = bcnMap.features;
+	            var polygons = [];
+	            
+	            //L.geoJson(bcnMap, {style: style}).addTo(map);
+	            var geoJsonLayer =  new L.geoJson(bcnMap, {
+	            	style: style,
+	            	onEachFeature: function(feature, layer){
+	            		// 
+	            		layer.bindPopup('District: ' + feature.properties.Pollution.district + ' \n ' +
+	            						 'so2: ' + feature.properties.Pollution.so2);
+	            	}});
+	            
+	            controlLayer.addOverlay(geoJsonLayer, "Pollution");
+	            //geoJsonLayer.addTo(map);
+	            //controlLayer.addTo(map);
+	            
+	            /*
+	            // Pinta poligons a ma
+	            for(var i = 0; i < features.length; i++){
+	                var polygonCoordinates = features[i].geometry.coordinates[0];
+	                var polygon = [];
+	                
+	                for(var j = 0; j < polygonCoordinates.length; j++){
+	                    var coordinate = [];
+	                    coordinate.push(polygonCoordinates[j][1]);
+	                    coordinate.push(polygonCoordinates[j][0]);
+	                    polygon.push(coordinate);
+	                }
+	                polygons.push(polygon);
+	            }
+	            for(var k = 0; k < polygons.length; k++){
+	                var neighborhood = L.polygon(polygons[k], {weight: 1}).addTo(map);
+	            }
+	            */
+	
+	        },
+	        error: function(jqXHR, textStatus, error){
+	            console.log(error);
+	        }
+	    });
+	    
+	    	var legend = L.control({position: 'bottomright'});
+			
+			legend.onAdd = function (map) {
+
+		    var div = L.DomUtil.create('div', 'info legend'),
+		        grades = [0, 1, 2],
+		        labels = ["Optimal", "Regular", "Bad"];
+		
+		    // loop through our density intervals and generate a label with a colored square for each interval
+		    for (var i = 0; i < grades.length; i++) {
+		        div.innerHTML +=
+		            '<i style="background:' + getColor(grades[i]) + '"></i> ' +
+		            labels[i] + '<br>' ;
+		    }
+		
+		    return div;
+			};
+			
+			legend.addTo(map);
+
+		
+	</script>
+	
+
+{% endblock %}
