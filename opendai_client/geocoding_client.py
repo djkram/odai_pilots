@@ -8,7 +8,6 @@ from geopy import geocoders
 from opendai_lleida_web.models import GeoResolve
 import logging
 import json
-import geojson
 import utm
 import sys
 
@@ -32,7 +31,7 @@ class GeoCoding(object):
             return geoResolved.place, (float(geoResolved.lat), float(geoResolved.lng))
         
         except: 
-            logging.warn("Finding error: " + sys.exc_info()[0])
+            logging.warn("Finding error: " + str(sys.exc_info()[0]))
             # try Geonames api
             try:  
                 logging.debug( "Georesolving GeoNames"    )   
