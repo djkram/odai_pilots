@@ -50,6 +50,24 @@ def bustops_by_id(request, id):
     mimetype = 'application/json'
     return HttpResponse(json.dumps(result_all), mimetype, st)
 
+def bustops_near(request):
+    
+    mimetype = 'application/json'
+    
+    try:
+        p_lat = float(request.GET.get('lat'))
+        p_lng = float(request.GET.get('lng'))
+        p_r = float(request.GET.get('r'))
+        
+        result_all = client.get_lleida_bustops_near(p_lat, p_lng, p_r)
+    except :
+        st = 400
+        return HttpResponse('400: Bad Request',st)
+    
+    st = 200
+    return HttpResponse(json.dumps(result_all), mimetype, st)
+
+
 def pois_category_all(request):
     
     result_all = client.get_lleida_pois_categories_all()

@@ -16,7 +16,7 @@ from opendai_bcn_web.data_cron import DataCron
 
 # init
 c = DataCron () 
-c.get_pollution()
+#c.get_pollution()
 
 urlpatterns = patterns('',
     

@@ -17,6 +17,7 @@ class SimpleTest(TestCase):
         a_c = ApiClient()
         g_c = GeoCoding()
         
+        
         bus_all = a_c.get_lleida_buslines_all()
         self.assertIsNotNone(bus_all, 'No Response! get_lleida_buslines_all')
         
@@ -29,3 +30,15 @@ class SimpleTest(TestCase):
         
         bustop_all = a_c.get_lleida_bustops_all()
         self.assertIsNotNone(bustop_all, 'No Response! get_lleida_bustops_all')
+        
+        obj = [{"coordX": "305169.8", "geo": {"lat": 41.62795229360017, "lng": 0.6611302166483837}, "id": 1, "coordY": "4611117.6", "name": "Av Ind\u00fastria P.503"}, {"coordX": "305327.3", "geo": {"lat": 41.3850639, "lng": 2.1734035}}]
+        p_lat = 41.62795229360017
+        p_lng = 0.6611302166483837
+        p_r = 10000
+        bustop_near = g_c.get_near(obj, p_lat, p_lng, p_r)
+        self.assertEqual([(0.6611302166483837, 41.62795229360017)], bustop_near, "Error: different number of ponts than expected")
+       
+        bustop_near = a_c.get_lleida_bustops_near(p_lat, p_lng, p_r)
+        print bustop_near
+        self.assertNotEqual(bustop_all, bustop_near, "Sema that general search")
+        

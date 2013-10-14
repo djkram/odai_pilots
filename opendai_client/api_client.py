@@ -6,6 +6,7 @@ Created on 06/06/2013
 
 from geopy import geocoders
 from opendai_client import geocoding_client
+from itertools import product
 import logging
 import requests
 import json, geojson
@@ -143,6 +144,22 @@ class ApiClient(object):
             result[index]['geo'] = {'lat':lat, 'lng':lng}
         
         return result
+
+    def get_lleida_bustops_near(self, p_lat, p_lng, p_r):
+        
+        all_stops = self.get_lleida_bustops_all()
+        points = self.geocoder.get_near(all_stops, p_lat, p_lng, p_r)
+        
+        results = []
+        
+        for (point, stop) in product(points, all_stops):
+            
+            if (stop['geo'] == {"lat":point[1], "lng":point[0]}):
+                results.append(stop)
+        
+        #results.append(stop for point in points for stop in all_stops if stop['geo'] == {"lat":point[1], "lng":point[0]})
+            
+        return results
     
     def get_lleida_buslines_all(self):
         r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "datapublication/buslines/all/");

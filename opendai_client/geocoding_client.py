@@ -3,7 +3,7 @@ Created on 20/09/2013
 
 @author: mplanaguma
 '''
-from django.contrib.gis.geos import LineString, Point, MultiLineString
+from django.contrib.gis.geos import LineString, Point, MultiLineString, MultiPoint
 from geopy import geocoders
 from opendai_lleida_web.models import GeoResolve
 import logging
@@ -117,5 +117,28 @@ class GeoCoding(object):
             return (None, None)
             
             
+    def get_near(self, json, p_lat, p_lng, p_r):
+        
+        central_point = Point(p_lng, p_lat)
+        
+        circle = central_point.buffer(p_r/100000.0)
+        print circle.json
+        
+        points = []
+        
+        for o in json:
+            lat = o['geo']['lat']
+            lng = o['geo']['lng']
+            if lat == None: continue
+        
+            point = Point( lng , lat)
+            points.append(point)
+        
+        mp = MultiPoint(points)
+        
+        mp_results = mp.intersection(circle) 
+        
+        result = [mp_results.coords] if mp_results.geom_type == 'Point' else [coord for coord in mp_results.coords]
+        return result
         
         
