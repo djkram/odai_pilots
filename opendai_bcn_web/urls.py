@@ -21,7 +21,8 @@ c = DataCron ()
 urlpatterns = patterns('',
     
     url(r'^$', views.index),
-    url(r'^bcn.geojson$', views.bcn_geojson, name='data'),
+    url(r'^bcn.geojson$', views.bcn_geojson),
+    url(r'^weather$', views.weather_all),
     
     #url(r'^data.geojson$', TestGeoLayer.as_view(model=TestGeo), name='data'),
     

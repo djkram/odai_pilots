@@ -1,18 +1,28 @@
+# -*- coding: utf-8 -*-
 # BCN views 
+
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from opendai_bcn_web.models import Pollution
+from bs4 import BeautifulSoup
+import datetime
+import requests
 import geojson
+import json
 import os
+import re
 
 #import datetime
-#import json
 #import logging
 #from shapely.geometry import asShape
 #from opendai_client.api_client import ApiClient
 #from djgeojson.views import GeoJSONLayerView
 #from opendai_bcn_web.models import TestGeo
+
+from opendai_client.api_client import ApiClient
+
+client = ApiClient()
 
 def index(request):
     return render_to_response('bcn.html')
@@ -54,6 +64,47 @@ def bcn_geojson(request):
     st = 200
     mimetype = 'application/json'
     return HttpResponse(json, mimetype, st)
+
+def weather_all(request):
+    
+    result_all = client.get_bcn_weather_all()
+    
+    t_min, t_max, t_mati, t_tarda = None, None, None, None
+    sym_moring= None
+    sym_afternoon = None
+    
+    # Parsing: "Dc25-09: Temp.màx. 24 ºC Temp.mín. 18 ºC / Matí mig ennuvolat / Tarda mig ennuvolat"
+    for o in result_all:
+        d = o['description']
+        
+        p = "([0-9][0-9])-*"
+        l = re.findall(p,d)
+        
+        t_day = l[0] # Dc25-09
+        t_month = l[1] # Dc25-09
+        t_max = l[2] # 24 ºC 
+        t_min = l[3] # 18 ºC
+
+        
+        if int(t_day) == datetime.datetime.today().day and int(t_month) == datetime.datetime.today().month:
+            link = o['link']
+            path = link.replace(link.split('/')[-1],'')
+            r  = requests.get(link)
+            soup = BeautifulSoup(r.text)
+            div_content =  soup.find(id="FW_content")
+            imgs = div_content.find_all('img')
+            link.split('/')[-1]
+            sym_moring = path + str(imgs[0]['src'])
+            sym_afternoon = path + imgs[1]['src']
+            break
+        else:
+            continue
+        
+    result = {"max": t_max, "min": t_min, "prediction":{"morning": sym_moring, "afternoon": sym_afternoon}}
+    
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result), mimetype, st)
 
 #===============================================================================
 # class TestGeoLayer(GeoJSONLayerView):
