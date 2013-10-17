@@ -1,6 +1,10 @@
 # Django settings for opendai_lleida_web project.
 import os
 
+# Celery framwork
+import djcelery
+djcelery.setup_loader()
+
 # Project Path
 PROJECT_ROOT = os.path.dirname(__file__) #gets directory settings is in
 
@@ -30,7 +34,7 @@ DATABASES = {
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
 # although not all choices may be available on all operating systems.
 # In a Windows environment this must be set to your system time zone.
-TIME_ZONE = 'America/Chicago'
+TIME_ZONE = 'Europe/Andorra'
 
 # Language code for this installation. All choices can be found here:
 # http://www.i18nguy.com/unicode/language-identifiers.html
@@ -131,6 +135,9 @@ INSTALLED_APPS = (
     'django.contrib.admindocs',
     # 3rd party Apps
     'leaflet',
+    # Delery scheduling
+    'kombu.transport.django',
+    'djcelery',
     #'djgeojson',
     # internal Apps
     'opendai_bcn_web',
@@ -148,6 +155,17 @@ LEAFLET_CONFIG = {
         },
 
 }
+
+# Celery Broker
+BROKER_URL = 'amqp://guest:guest@localhost:5672/' #RabbiMQ
+#BROKER_URL = 'django://' #Django ORM
+BROKER_HOST = "localhost"
+BROKER_PORT = 5672
+BROKER_USER = "admin"
+BROKER_PASSWORD = "20272027"
+BROKER_VHOST = "testhost"
+CELERY_SEND_TASK_SENT_EVENT = True
+#CELERY_ALWAYS_EAGER = True
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to

@@ -7,14 +7,14 @@ Replace this with more appropriate tests for your application.
 
 from django.test import TestCase
 
-from opendai_bcn_web.data_cron import DataCron
+from opendai_bcn_web.data_cron import DataLoad
 from opendai_bcn_web.models import Pollution
 
 
 class SimpleTest(TestCase):
     
     def test_basic_addition(self):
-        c = DataCron()   
+        c = DataLoad()   
         c.get_pollution()
         c.get_pollution()
         

@@ -19,7 +19,7 @@ class Pollution(models.Model):
     pm10 = models.CharField(max_length=20, null=True)
     # 0-Good 1-Bad 2-Poor
     alert = models.IntegerField()
-    datetime = models.DateField(auto_now=True)
+    datetime = models.DateTimeField(auto_now=True)
 
     class Meta:
         get_latest_by = 'datetime'

@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
 # BCN views 
 
+from bs4 import BeautifulSoup
 from django.forms.models import model_to_dict
 from django.http import HttpResponse
 from django.shortcuts import render_to_response
 from opendai_bcn_web.models import Pollution
-from bs4 import BeautifulSoup
-import datetime
-import requests
+from opendai_client.api_client import ApiClient
+from opendai_client.shape_files import shapefiles
+
+from datetime import datetime, timedelta
 import geojson
 import json
 import os
+import logging
 import re
+import requests
+from celery.events.state import State
+from celery.task.control import inspect
+from celery.result import AsyncResult
 
+from opendai_bcn_web.tasks import process_pollution
+from opendai_bcn_web.bcn_jobs import pollution_job
 #import datetime
 #import logging
 #from shapely.geometry import asShape
 #from opendai_client.api_client import ApiClient
 #from djgeojson.views import GeoJSONLayerView
 #from opendai_bcn_web.models import TestGeo
-
-from opendai_client.api_client import ApiClient
 
 client = ApiClient()
 
@@ -30,34 +37,30 @@ def index(request):
 
 def bcn_geojson(request):
     
-    file_name = 'bcn.json'
-    dir_name = os.path.dirname(__file__)
-    full_path = os.path.join(dir_name, file_name)
+    deprecate_date = timedelta (seconds = 1)
+    last = Pollution.objects.all().latest()
+    dt = last.datetime.replace(tzinfo=None) # Remove time zone
     
-    f = open(full_path,'r')
-    json = f.read()
-    #print json
+    celery_inspector = inspect()
+    workers = celery_inspector.active()
+    name, value = workers.popitem()
     
-    q = geojson.loads(json, object_hook=geojson.GeoJSON.to_instance)
+    if not last: # Empty Cache
+        pollution_job.get_pollution()
+    elif ((datetime.utcnow() - dt) > deprecate_date) and not value: # Deprecated Cache
+        running_task = process_pollution.apply_async()
+        print "Running task"
+        logging.debug(running_task.ready())
+    
+    q = shapefiles.bcn_geojson()
     
     for f in q.features:
         district = f.properties['District']
         
         d = Pollution.objects.filter(district=district).order_by('-datetime').latest()
         
+        # Adding pollution Data
         f.properties['Pollution'] = model_to_dict(d)
-        
-        print d.district
-         
-        #=======================================================================
-        # zone = map_district_to_zones[district]
-        # print zone
-        # 
-        # result_by_id = client.get_pollution_by_ID(zone)
-        # print result_by_id
-        #=======================================================================
-        
-        #result_by_id.data.entry
         
     json = geojson.dumps(q)
     
@@ -105,6 +108,7 @@ def weather_all(request):
     st = 200
     mimetype = 'application/json'
     return HttpResponse(json.dumps(result), mimetype, st)
+
 
 #===============================================================================
 # class TestGeoLayer(GeoJSONLayerView):

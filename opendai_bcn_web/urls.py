@@ -1,7 +1,10 @@
 from django.conf.urls import patterns, url
 from opendai_bcn_web import views
-from opendai_bcn_web.data_cron import DataCron
+from opendai_bcn_web.data_load import DataLoad
 
+from opendai_bcn_web.bcn_jobs import pollution_job
+
+import threading
 
 #from djgeojson.views import GeoJSONLayerView
 #from opendai_bcn_web.views import TestGeoLayer
@@ -14,9 +17,15 @@ from opendai_bcn_web.data_cron import DataCron
 # )
 #===============================================================================
 
-# init
-c = DataCron () 
-#c.get_pollution()
+# init Threads
+#c = DataLoad () 
+
+#thread = threading.Thread(target=pollution_job.get_pollution)
+#thread.setDaemon(True)
+#thread.start()
+
+#thread = DataLoad(my_id=1234)
+#thread.start() 
 
 urlpatterns = patterns('',
     
