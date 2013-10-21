@@ -8,3 +8,8 @@ class GeoResolve(models.Model):
     place = models.CharField(max_length=200)
     lat = models.DecimalField(max_digits=30, decimal_places=20)
     lng = models.DecimalField(max_digits=30, decimal_places=20)
+    # Ordering
+    datetime = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        get_latest_by = 'datetime'

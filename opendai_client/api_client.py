@@ -4,12 +4,10 @@ Created on 06/06/2013
 @author: mplanaguma
 '''
 
-from geopy import geocoders
-from opendai_client import geocoding_client
+from opendai_client import geocoding_logic
 from itertools import product
 import logging
 import requests
-import json, geojson
 
 class ApiClient(object):
     
@@ -18,7 +16,7 @@ class ApiClient(object):
     LLEIDA_API = "apilleida/rest/json/"
 
     def __init__(self):
-        self.geocoder = geocoding_client.GeoCoding()
+        self.geocoder = geocoding_logic.GeoCodingLogic()
         
     def get_pollution_all(self):
         r = requests.get(self.OPENDAI_URL + self.BCN_API + "pollution/zone/all"); 
@@ -172,7 +170,7 @@ class ApiClient(object):
         
         return self.geocoder.get_bus_line_geojson(result)
         
-    
+        
     def get_lleida_buslines_id(self, id):
         r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "datapublication/buslines/" + id);
         payload = r.json()
@@ -183,6 +181,7 @@ class ApiClient(object):
         result = payload['data']['entry']
         
         return result
+    
     
     def get_lleida_pois_categories_all(self):
         r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "datapublication/pois/category/all");
