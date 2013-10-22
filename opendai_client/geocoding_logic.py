@@ -43,7 +43,7 @@ class GeoCodingLogic(object):
                 try:
                     geoResolved.save()
                 except:
-                    logging.error("Storing error: " + sys.exc_info()[0]);
+                    logging.error("Storing error: " + str(sys.exc_info()[0]));
                 
             return place, (lat, lng)
     
@@ -68,8 +68,11 @@ class GeoCodingLogic(object):
             return place, (lat, lng)        
         
     
-    def get_lat_lon_by_street(self, street, city):
-        return self.get_lat_lon_by_address_cached(street + ", " + city)
+    def get_lat_lon_by_street(self, street, city, bb=None):
+        return self.get_lat_lon_by_address_cached(street + ", " + city, bb)
+    
+    def get_lat_lon_by_street_async(self, street, city, bb=None):
+        return self.get_lat_lon_by_address_cached_async(street + ", " + city, bb)
 
 
     def get_bus_line_geojson(self, jsons):

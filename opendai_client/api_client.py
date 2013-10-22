@@ -14,6 +14,8 @@ class ApiClient(object):
     OPENDAI_URL = "http://194.116.110.155:8080/"
     BCN_API = "apibarcelona/rest/json/"
     LLEIDA_API = "apilleida/rest/json/"
+    BB_LLEIDA = [(0.5599594116210938,41.580525125613846),(0.5599594116210938,41.65649719441145),(0.7123947143554688,41.65649719441145),(0.7123947143554688,41.580525125613846)]
+    LLEIDA = "Lleida"    
 
     def __init__(self):
         self.geocoder = geocoding_logic.GeoCodingLogic()
@@ -70,16 +72,11 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        #=======================================================================
-        # city = "Lleida"
-        # 
-        # for index, p in enumerate(result):  
-        #    
-        #    street = p['street']
-        #    place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
-        #            
-        #    result[index]['geo'] = {'lat' : lat, 'lng' : lng}
-        #=======================================================================
+        for index, p in enumerate(result):  
+            street = p['street']
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street_async(street, self.LLEIDA, self.BB_LLEIDA)
+                    
+            result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         
         return result
 
@@ -92,12 +89,10 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        city = "Lleida"
-        
         for index, p in enumerate(result):  
             
             street = p['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street_async(street, self.LLEIDA, self.BB_LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         
@@ -217,9 +212,8 @@ class ApiClient(object):
                 
                 result[index]['geo'] = {'lat':lat, 'lng':lng}   
             else:
-                city = "Lleida"
                 street = r['address']
-                place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+                place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, self.LLEIDA)
                 result[index]['geo'] = {'lat' : lat, 'lng' : lng}
                 
         return result
@@ -233,12 +227,10 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        city = "Lleida"
-        
         for index, p in enumerate(result):  
             
             street = p['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, self.LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         
@@ -253,12 +245,10 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        city = "Lleida"
-        
         for index, p in enumerate(result):  
             
             street = p['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, self.LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         
@@ -273,12 +263,10 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        city = "Lleida"
-        
         for index, p in enumerate(result):  
             
             street = p['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, self.LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         
@@ -293,12 +281,10 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        city = "Lleida"
-        
         for index, p in enumerate(result):  
             
             street = p['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, self.LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         
@@ -313,12 +299,10 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
-        city = "Lleida"
-        
         for index, p in enumerate(result):  
             
             street = p['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, self.LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
         

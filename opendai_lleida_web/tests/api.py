@@ -30,3 +30,6 @@ class APITest(TestCase):
         bustop_near = a_c.get_lleida_bustops_near(p_lat, p_lng, p_r)
         self.assertNotEqual(bustop_all, bustop_near, "Sema that general search")
         
+        #alert_all = a_c.get_lleida_alerts()
+        #self.assertIsNotNone(alert_all, 'No Response! get_lleida_alerts')
+        

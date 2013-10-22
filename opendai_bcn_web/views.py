@@ -41,6 +41,7 @@ def bcn_geojson(request):
     last = Pollution.objects.all().latest()
     dt = last.datetime.replace(tzinfo=None) # Remove time zone
     
+    # Celery task inspector
     celery_inspector = inspect()
     workers = celery_inspector.active()
     name, value = workers.popitem()

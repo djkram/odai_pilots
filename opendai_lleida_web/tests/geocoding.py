@@ -48,6 +48,9 @@ class GeoTest(TestCase):
         resolved = self.g_c.get_lat_lon_by_address_cached("carrer major, Lleida")
         self.assertIsNotNone(resolved)
         
+        resolved = self.g_c.get_lat_lon_by_address_cached("djhsbdvkjhasbdkjchv", bb=bb_lleida)
+        self.assertIsNotNone(resolved)
+        
         resolved = self.g_c.get_lat_lon_by_address_cached_async("djhsbdvkjhasbdkjchv", bb=bb_lleida)
         
         pass

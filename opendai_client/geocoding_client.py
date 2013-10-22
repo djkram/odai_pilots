@@ -6,7 +6,7 @@ Created on 20/09/2013
 from django.contrib.gis.geos import LineString, Point, MultiLineString, MultiPoint, LinearRing, Polygon
 from geopy import geocoders
 
-import logging
+import logging, sys
 
 class GeoCodingClient(object):
 
@@ -49,10 +49,12 @@ class GeoCodingClient(object):
                 geo_results = self.g_geonames.geocode(address, exactly_one=False)
                 place, (lat, lng) = is_inside(geo_results, bounding_box)
             else:
-                place, (lat, lng) = self.g_geonames.geocode(address, exactly_one=True)
+                geo_result = self.g_geonames.geocode(address, exactly_one=True)
+                if geo_result:
+                    place, (lat, lng) = geo_result
             
         except:
-            logging.warn( "GeoNames Exception!")
+            logging.warn( "GeoNames Exception: " + str(sys.exc_info()[1]))
             
         # try google api
         if place == None:
@@ -65,7 +67,7 @@ class GeoCodingClient(object):
                     place, (lat, lng) = self.g_google.geocode(address, region="es", exactly_one=True)
                 
             except:
-                logging.warn( "Google Exception!")  
+                logging.warn( "Google Exception: " + str(sys.exc_info()[1]))  
                 
         # try Bing api
         if place == None:
@@ -79,7 +81,7 @@ class GeoCodingClient(object):
                     place, (lat, lng) = self.g_bing.geocode(address, exactly_one=False)
                 
             except:
-                logging.warn( "Bing Exception!")  
+                logging.warn( "Bing Exception: " + str(sys.exc_info()[1]))  
                 
         return place, (lat, lng)
     
