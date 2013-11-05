@@ -149,9 +149,10 @@
 		var neighborhoods = [];
 		var geoJsonLayer;
 
+		// GeoJson Pollution
 	    $.ajax({
 	        type: "GET",
-	        url: "bcn.geojson",
+	        url: "pollution.geojson",
 	        success: function(bcnMap, textStatus, jqXHR){
 	        	
 	            var features = bcnMap.features;
@@ -214,6 +215,54 @@
 			};
 			
 			legend.addTo(map);
+			
+			
+		// GeoJson Traffic
+		
+		function getColorTraffic(d) {
+		    return 	d >= 5 ? '#000000' :
+		    		d >= 4 ? '#8B0000' :
+		    		d >= 3 ? '#EE0000' :
+		    		d >= 2 ? '#EE4000' :
+		           	d >= 1 ? '#FFD700' :
+		                     '#99CC32' ;
+		}
+		
+		function styleTraffic(feature) {
+		    return {
+		        //fillColor: getColorTraffic(feature.properties.status),
+		        weight: 2,
+		        opacity: 1,
+		        color: getColorTraffic(feature.properties.status),
+		        //dashArray: '3',
+		        fillOpacity: 0.7
+		    };
+		}		
+		
+	    $.ajax({
+	        type: "GET",
+	        url: "traffic_async.geojson",
+	        success: function(bcnMap, textStatus, jqXHR){
+	        	
+	            var features = bcnMap.features;
+	            var polygons = [];
+	            
+	            //L.geoJson(bcnMap, {style: style}).addTo(map);
+	            var geoJsonLayer =  new L.geoJson(bcnMap, {
+	            	style: styleTraffic,
+	            	onEachFeature: function(feature, layer){
+	            		// 
+	            		layer.bindPopup('Status: ' + feature.properties.status + ' \n ' +
+	            						 'Forecat: ' + feature.properties.forecast);
+	            	}});
+	            
+	            controlLayer.addOverlay(geoJsonLayer, "Traffic");
+	
+	        },
+	        error: function(jqXHR, textStatus, error){
+	            console.log(error);
+	        }
+	    });
 
 		
 	</script>

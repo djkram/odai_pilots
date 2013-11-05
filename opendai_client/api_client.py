@@ -318,3 +318,48 @@ class ApiClient(object):
         result = payload['data']['entry']
         
         return result
+    
+    def get_bcn_traffic_current(self):
+        r = requests.get(self.OPENDAI_URL + self.BCN_API + "streets/traffic/current"); 
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        
+        return result    
+
+    
+    def get_streets_stretches_by_id(self, id):
+        r = requests.get(self.OPENDAI_URL + self.BCN_API + "streets/stretches/" + id); 
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        return result
+    
+    
+    def get_bcn_traffic_current_geojson(self):
+        
+        traffic_results = self.get_bcn_traffic_current()
+        
+        for index, t_r in enumerate(traffic_results):  
+            id = t_r['id']
+            street_result = self.get_streets_stretches_by_id(id)
+            logging.debug('Got street stretch: ' + id)
+            traffic_results[index]['street_stretch'] = street_result
+            
+        result = self.geocoder.get_traffic_geojson(traffic_results)
+        
+        return result
+    
+    def get_bcn_traffic_current_geojson_async(self):
+        
+        result = self.geocoder.get_traffic_geojson_async()
+        
+        return result
+        
+    

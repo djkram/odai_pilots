@@ -20,8 +20,8 @@ from celery.events.state import State
 from celery.task.control import inspect
 from celery.result import AsyncResult
 
-from opendai_bcn_web.tasks import process_pollution
-from opendai_bcn_web.bcn_jobs import pollution_job
+from opendai_bcn_web.tasks import *
+from opendai_bcn_web.bcn_jobs import *
 #import datetime
 #import logging
 #from shapely.geometry import asShape
@@ -48,9 +48,9 @@ def bcn_geojson(request):
     
     if not last: # Empty Cache
         pollution_job.get_pollution()
-    elif ((datetime.utcnow() - dt) > deprecate_date) and not value: # Deprecated Cache
+    elif ((datetime.datetime.utcnow() - dt) > deprecate_date) and not value: # Deprecated Cache
         running_task = process_pollution.apply_async()
-        print "Running task"
+        #print "Running task"
         logging.debug(running_task.ready())
     
     q = shapefiles.bcn_geojson()
@@ -110,6 +110,24 @@ def weather_all(request):
     mimetype = 'application/json'
     return HttpResponse(json.dumps(result), mimetype, st)
 
+
+def traffic_lines_geojson(request):
+    
+    running_task = process_traffic.apply_async()
+    logging.info('runing task: ' + running_task.id)
+    result_all = client.get_bcn_traffic_current_geojson()
+    
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result_all), mimetype, st)
+
+def traffic_lines_geojson_async(request):
+    
+    result_all = client.get_bcn_traffic_current_geojson_async()
+    
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result_all), mimetype, st)
 
 #===============================================================================
 # class TestGeoLayer(GeoJSONLayerView):

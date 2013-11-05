@@ -9,7 +9,7 @@ from celery import task
 from celery.task.schedules import crontab
 from celery.task import periodic_task
 
-from opendai_bcn_web.bcn_jobs import pollution_job
+from opendai_bcn_web.bcn_jobs import pollution_job, traffic_job
 
 import logging
 
@@ -23,4 +23,10 @@ def process_pollution():
 def cron_process_pollution():
     logging.info("Periodic Pollution task executed!")
     pollution_job.get_pollution()
+    return True
+
+@task(name='process_traffic')
+def process_traffic():
+    logging.info("Traffic task executed!")
+    traffic_job.get_trafic()
     return True

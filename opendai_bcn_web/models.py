@@ -25,3 +25,16 @@ class Pollution(models.Model):
         get_latest_by = 'datetime'
     
     
+class Traffic(models.Model):
+    id_stretch = models.CharField(max_length=10, unique_for_date='datetime')
+    description = models.CharField(max_length=1000, null=True)
+    coordinates = models.CharField(max_length=5000, null=False)
+    status = models.CharField(max_length=10, null=False)
+    forecast = models.CharField(max_length=10, null=False)
+    tstamp = models.CharField(max_length=20, null=False)
+    
+    datetime = models.DateTimeField()
+
+    class Meta:
+        get_latest_by = 'datetime'
+    

@@ -3,15 +3,17 @@ Created on 20/09/2013
 
 @author: mplanaguma
 '''
-from django.contrib.gis.geos import LineString, Point, MultiLineString, MultiPoint, LinearRing, Polygon
-from opendai_lleida_web.models import GeoResolve
+from django.contrib.gis.geos import LineString, Point, MultiLineString, \
+    MultiPoint
+from opendai_bcn_web.models import Traffic
 from opendai_client.geocoding_client import GeoCodingClient
+from opendai_lleida_web.models import GeoResolve
 from opendai_lleida_web.tasks import process_geocoding
-
-import logging
 import json
-import utm
+import logging
 import sys
+import utm
+
 
 class GeoCodingLogic(object):
 
@@ -148,14 +150,65 @@ class GeoCodingLogic(object):
         return result
     
     
-    def geocoding_cache(self, result_all):
+    def get_traffic_geojson(self, jsons):
         
-        for index, item in enumerate(result_all):  
+        fc = {"type": "FeatureCollection", "features": []}
+        
+        for j in jsons:
             
-            street = item['street']
-            place, (lat, lng) = self.geocoder.get_lat_lon_by_street(street, city)
+            f = { "type": "Feature", "geometry": {}, "properties": {} } 
+            
+            street_coordinates = None
+            try: 
+                street_info = j.get('street_stretch')
+                #print street_info
+                street_coordinates = street_info[0].get('coordinates')
+                
+                f["properties"] = j
+            except:
+                logging.warning('Error getting street info: ' + str(sys.exc_info()[1]))
+                continue 
+                
+            line = []
+            points = [x.replace("0 ", "") for x in street_coordinates.split(',')]
+            for position in xrange(len(points)/2):
+                p = position * 2
+                point = Point( float(points[p]) , float(points[p+1]))
+                line.append(point)
+                
+            lstr = LineString(line)
+            f["geometry"] = json.loads(lstr.json)
+            fc["features"].append(f)
         
-        pass
+        logging.debug('Trafic GeoJson created')
+        return fc
+                
+        
+    def get_traffic_geojson_async(self):
+        
+        try:
+            last_traffic = Traffic.objects.all().latest()
+        except:
+            return {}
+            
+        last_date = last_traffic.datetime
+        
+        last_traffics = Traffic.objects.filter(datetime=last_date)
+        
+        list_jsons= []
+        for l_t in last_traffics:
+            
+            street_stretch = [{"id_stretch": l_t.id_stretch, "description":l_t.description, "coordinates":l_t.coordinates}]
+            street_json = {"id": l_t.id_stretch, "status": l_t.status, "forecast": l_t.forecast, "street_stretch": street_stretch, "tstamp":l_t.tstamp}
+             
+            list_jsons.append(street_json)
+            
+        fc = self.get_traffic_geojson(list_jsons)
+            
+        return fc
         
         
+                
+                
+       
         

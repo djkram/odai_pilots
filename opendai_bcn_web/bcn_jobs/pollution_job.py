@@ -1,7 +1,7 @@
 '''
 Created on 25/07/2013
 
-@author: bdigital_mob
+@author: mplanaguma
 '''
 import random
 
@@ -30,7 +30,7 @@ def get_pollution():
                 
                 for d in districts:
                     logging.info("storing result for district : " + d)
-                    alert = alarm_level_fake(r)
+                    alert = alarm_level(r)
                     logging.info( alert)
                     
                     p = Pollution(district= d, so2=r['so2'], no=r['no'], no2=r['no2'], o3=r['o3'], co=r['co'], pm10=r['pm10'], alert=alert)

@@ -15,11 +15,14 @@ urlpatterns = patterns('',
     # Uncomment the next line to enable the admin:
     url(r'^admin/', include(admin.site.urls)),
     
-        # Views
+    # Lleida
     url(r'^lleida/', include('opendai_lleida_web.urls')),
     
-    # Actions
+    # BCN
     url(r'^bcn/', include('opendai_bcn_web.urls')),
+    
+    # GeoCoding
+    url(r'^geo/', include('opendai_client.urls')),
     
     
 
