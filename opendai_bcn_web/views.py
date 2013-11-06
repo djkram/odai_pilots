@@ -19,6 +19,7 @@ import requests
 from celery.events.state import State
 from celery.task.control import inspect
 from celery.result import AsyncResult
+from django.core.exceptions import ObjectDoesNotExist
 
 from opendai_bcn_web.tasks import *
 from opendai_bcn_web.bcn_jobs import *
@@ -38,20 +39,28 @@ def index(request):
 def bcn_geojson(request):
     
     deprecate_date = timedelta (seconds = 1)
-    last = Pollution.objects.all().latest()
-    dt = last.datetime.replace(tzinfo=None) # Remove time zone
+    try:
+        last = Pollution.objects.all().latest()
+        
+        dt = last.datetime.replace(tzinfo=None) # Remove time zone
+        # Celery task inspector
+        celery_inspector = inspect()
+        workers = celery_inspector.active()
+        name, value = workers.popitem()
     
-    # Celery task inspector
-    celery_inspector = inspect()
-    workers = celery_inspector.active()
-    name, value = workers.popitem()
-    
-    if not last: # Empty Cache
+        if not last: # Empty Cache
+            pollution_job.get_pollution()
+            
+        elif ((datetime.datetime.utcnow() - dt) > deprecate_date) and not value: # Deprecated Cache
+            running_task = process_pollution.apply_async()
+            #print "Running task"
+            logging.debug(running_task.ready())
+        
+    except ObjectDoesNotExist:
+        # Empty DB
         pollution_job.get_pollution()
-    elif ((datetime.datetime.utcnow() - dt) > deprecate_date) and not value: # Deprecated Cache
-        running_task = process_pollution.apply_async()
-        #print "Running task"
-        logging.debug(running_task.ready())
+        
+
     
     q = shapefiles.bcn_geojson()
     
