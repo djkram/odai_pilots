@@ -30,7 +30,7 @@ def get_pollution():
                 
                 for d in districts:
                     logging.info("storing result for district : " + d)
-                    alert = alarm_level(r)
+                    alert = alarm_level_fake(r)
                     logging.info( alert)
                     
                     p = Pollution(district= d, so2=r['so2'], no=r['no'], no2=r['no2'], o3=r['o3'], co=r['co'], pm10=r['pm10'], alert=alert)
@@ -68,7 +68,7 @@ def alarm_level(r):
     return 0
 
 def alarm_level_fake(r):
-    l = [0,1,2]
+    l = [0, 0, 0, 0, 1, 1, 2]
     random.shuffle(l)
     result = l[0]
     return result

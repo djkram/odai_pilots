@@ -38,6 +38,8 @@ class GeoCodingLogic(object):
             
             place, (lat, lng) = self.g_c.get_lat_lon_by_address(address, bb=bb)
             
+            print place, (lat, lng)
+            
             # Storing Cache 
             if place != None: 
                 logging.debug( "Storing Place on DB: " + unicode(place)) 
