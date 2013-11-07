@@ -1,0 +1,32 @@
+.ui-toggleswitch {
+  position:relative;
+  width: 100px;
+  height: 1.2em;
+  z-index: 0;
+}
+
+.ui-toggleswitch-child {
+  width: 50%;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  text-align: center;
+}
+
+.ui-toggleswitch-state {
+  z-index: 5;
+}
+
+.ui-toggleswitch-off {
+  left: 0;
+}
+
+.ui-toggleswitch-on {
+  right: 0;
+}
+
+.ui-toggleswitch-switch {
+  left: 0;
+  z-index: 10;
+  background-color: white;
+}

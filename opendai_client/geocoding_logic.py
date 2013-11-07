@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 20/09/2013
 
@@ -38,7 +39,7 @@ class GeoCodingLogic(object):
             
             place, (lat, lng) = self.g_c.get_lat_lon_by_address(address, bb=bb)
             
-            print place, (lat, lng)
+            #print place, (lat, lng)
             
             # Storing Cache 
             if place != None: 

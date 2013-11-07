@@ -11,12 +11,26 @@
 
 <!--TODO add pluguin-->
 <script src="http://code.jquery.com/jquery-1.10.1.min.js" type="application/javascript"></script>
-    
-<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css">
-<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/plugins/themes/base/jquery.ui.selectmenu.css">
 
+<!-- jQuery Mobile    
+<link rel="stylesheet" href="../static/media/jquery.mobile-1.3.2/jquery.mobile-1.3.2.min.css">
+<link rel="stylesheet" href="../static/media/jquery.mobile-1.3.2/jquery.mobile.structure-1.3.2.min.css">
+<link rel="stylesheet" href="../static/media/jquery.mobile-1.3.2/jquery.mobile.theme-1.3.2.min.css">
+
+<script src="../static/media/jquery.mobile-1.3.2/jquery.mobile-1.3.2.min.js" type="application/javascript"></script>
+--> 
+     
+<!-- jQuery UI -->  
+<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/css/redmond/jquery-ui-1.10.3.custom.css">
 <script src="../static/media/jquery-ui-1.10.3.custom/js/jquery-ui-1.10.3.custom.js" type="application/javascript"></script>
+
+<!-- jQuery UI Pluguins-->  
+<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/plugins/themes/base/jquery.ui.selectmenu.css">
 <script src="../static/media/jquery-ui-1.10.3.custom/plugins/ui/jquery.ui.selectmenu.js" type="application/javascript"></script>   
+<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/plugins/toggleswitch.css">
+<script src="../static/media/jquery-ui-1.10.3.custom/plugins/toggleswitch.js" type="application/javascript"></script>   
+   
+    
     
 <style>	
 	body {
@@ -119,7 +133,7 @@
 		};
 		
 		// Layers
-		var controlLayer = L.control.layers(baseMaps,null, {collapsed:false});
+		var controlLayer = L.control.layers(baseMaps,null, {collapsed:true});
 		controlLayer.addTo(map);
 		
 		    // Pois Layer
@@ -347,7 +361,8 @@
 					url: "pois/category/all",
 					success: function(data){
 				
-						var selectHTML = "<select name='speedA' id='pois-categories'>";
+						var selectHTML = "<table><tr><td>";
+						selectHTML += "<select name='speedA' id='pois-categories' style='padding-top: 4px; margin-top: 10px;'>";
 					
 						for (var i=0; i < data.length; i++) {
 							element = data[i];
@@ -356,8 +371,10 @@
 				
 						};
 						
-						selectHTML += "</select>";
+						selectHTML += "</select></td><td>";
 						selectHTML += "<input id='b-pois' type='submit' value='View'/>";
+						selectHTML += "</td></tr></table>";
+						
 						menu_pois.append(selectHTML);
 						menu_pois.find('#b-pois').button().click(function( event ) {
 							change_poi_category($('#pois-categories option:selected').val());
