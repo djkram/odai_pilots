@@ -5,5 +5,3 @@ local_settings.py
 .pydevproject
 .project
 .settings
-*.sqlite
-*.db
