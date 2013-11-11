@@ -11,6 +11,9 @@ client = ApiClient()
 def index(request):
     return render_to_response('lleida.html')
 
+def index_test(request):
+    return render_to_response('jqm.html')
+
 def alerts(request):
     
     result_all = client.get_lleida_alerts()

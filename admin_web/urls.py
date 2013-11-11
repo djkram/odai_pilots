@@ -4,6 +4,8 @@ from django.conf.urls import patterns, include, url
 from django.contrib import admin
 admin.autodiscover()
 
+import opendai_lleida_web
+
 urlpatterns = patterns('',
     # Examples:
     # url(r'^$', 'opendai_lleida_web.views.home', name='home'),
@@ -23,6 +25,8 @@ urlpatterns = patterns('',
     
     # GeoCoding
     url(r'^geo/', include('opendai_client.urls')),
+    
+    url(r'^jqm/$', opendai_lleida_web.views.index_test),
     
     
 

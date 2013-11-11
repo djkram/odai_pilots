@@ -87,6 +87,7 @@ $.widget("ui.selectmenu", {
 					setTimeout( function() { self._safemouseup = true; }, 300 );
 				}
 
+				event.stopPropagation()
 				event.preventDefault();
 			})
 			.bind( 'click.selectmenu', function( event ) {
@@ -825,7 +826,7 @@ $.widget("ui.selectmenu", {
 
 		this.listWrap
 			.removeAttr( 'style' )
-			.zIndex( this.element.zIndex() + 2 )
+			.zIndex( this.element.zIndex() + 999999 )
 			.position( $.extend( positionDefault, o.positionOptions ) );
 	}
 });
