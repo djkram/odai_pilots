@@ -15,6 +15,7 @@ client = ApiClient()
 
 def get_trafic():
 
+    # change TZ info
     t_now = datetime.datetime.now().replace(tzinfo=utc)
     traffic_status = client.get_bcn_traffic_current()
     

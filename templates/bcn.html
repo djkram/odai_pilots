@@ -41,6 +41,13 @@
 			margin-right: 8px;
 			opacity: 0.7;
 		}
+		
+		#logo {
+	        position: absolute;
+	        bottom: -0.7%;
+	        left: 5%;
+	        z-index: 1000;
+    	}
 	</style>
 	
 	<script src="http://code.jquery.com/jquery-1.10.1.min.js" type="application/javascript"></script>
@@ -50,15 +57,15 @@
 {% block body %}
 
 
-	
+	<div id="logo"><img src='../static/media/images/open-dai-logo-for-web-bottom.png' style="width:400px"/></div>
 	<div id="map"></div>
 	
 	<script type="text/javascript">
 	
 		// punts
-		var punt1 = L.marker([41.3850639, 2.1734035]).bindPopup('Punt 1');
-	    var punt2 = L.marker([41.41338061238166, 2.198638916015625]).bindPopup('Punt 2');
-	    var punts = L.layerGroup([punt1, punt2]);
+		//var punt1 = L.marker([41.3850639, 2.1734035]).bindPopup('Punt 1');
+	    //var punt2 = L.marker([41.41338061238166, 2.198638916015625]).bindPopup('Punt 2');
+	    //var punts = L.layerGroup([punt1, punt2]);
 	    
 	    var minimal_style = 22677,
 	    	normal_style = 997,
@@ -77,10 +84,13 @@
 		var map = L.map('map', {
 			    center: new L.LatLng(41.3850639, 2.1734035),
     			zoom: 12,
-    			layers: [minimal, punts]
+    			layers: [minimal],
+    			zoomControl: false
 			
 		});
-		
+	
+		var zoomControl = L.control.zoom({position:'bottomleft'});
+		zoomControl.addTo(map);
 		
 		/*
 		var map = L.map('map').setView([41.3850639, 2.1734035], 12);
@@ -140,10 +150,10 @@
 		};
 		
 		var overlayMaps = {
-		    "Punts": punts
+		    //"Punts": punts
 		};
 		
-		var controlLayer = L.control.layers(baseMaps, overlayMaps);
+		var controlLayer = L.control.layers(baseMaps, overlayMaps, {position:'bottomright'});
 		controlLayer.addTo(map);
 		
 		var neighborhoods = [];
@@ -152,7 +162,7 @@
 		// GeoJson Pollution
 	    $.ajax({
 	        type: "GET",
-	        url: "pollution.geojson",
+	        url: "pollution_async.geojson",
 	        success: function(bcnMap, textStatus, jqXHR){
 	        	
 	            var features = bcnMap.features;
@@ -168,6 +178,8 @@
 	            	}});
 	            
 	            controlLayer.addOverlay(geoJsonLayer, "Pollution");
+	            map.addLayer(geoJsonLayer);
+	            
 	            //geoJsonLayer.addTo(map);
 	            //controlLayer.addTo(map);
 	            
@@ -196,13 +208,13 @@
 	        }
 	    });
 	    
-	    	var legend = L.control({position: 'bottomright'});
+	    	var legend = L.control({position: 'topright'});
 			
 			legend.onAdd = function (map) {
 
 		    var div = L.DomUtil.create('div', 'info legend'),
 		        grades = [0, 1, 2],
-		        labels = ["Optimal", "Regular", "Bad"];
+		        labels = ["Normal", "Poor", "Bad"];
 		
 		    // loop through our density intervals and generate a label with a colored square for each interval
 		    for (var i = 0; i < grades.length; i++) {
@@ -257,6 +269,7 @@
 	            	}});
 	            
 	            controlLayer.addOverlay(geoJsonLayer, "Traffic");
+	            map.addLayer(geoJsonLayer);
 	
 	        },
 	        error: function(jqXHR, textStatus, error){

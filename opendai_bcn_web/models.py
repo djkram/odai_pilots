@@ -37,4 +37,20 @@ class Traffic(models.Model):
 
     class Meta:
         get_latest_by = 'datetime'
+        
+
+class Noise(models.Model):
+    id_street = models.CharField(max_length=10, unique_for_date='datetime')
+    type_street = models.CharField(max_length=10, null=True)
+    short_name_street = models.CharField(max_length=1000, null=True)
+    long_name_street = models.CharField(max_length=1000, null=False)
+    num_street = models.CharField(max_length=10, null=False)
+    noise_morning = models.CharField(max_length=20, null=False)
+    noise_evening = models.CharField(max_length=20, null=False)
+    noise_night = models.CharField(max_length=20, null=False)
+    
+    datetime = models.DateTimeField()
+
+    class Meta:
+        get_latest_by = 'datetime'
     

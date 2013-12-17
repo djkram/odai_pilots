@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 25/07/2013
 
@@ -24,13 +25,14 @@ def get_pollution():
         
         for r in result_by_id:
             
-            if r['hour'] == 'Mitjana':
+            if r['hour'] == 'Màxima':
                 
                 districts = zone_to_districts(zone)
                 
                 for d in districts:
                     logging.info("storing result for district : " + d)
-                    alert = alarm_level_fake(r)
+                    #alert = alarm_level_fake(r)
+                    alert = alarm_level(r)
                     logging.info( alert)
                     
                     p = Pollution(district= d, so2=r['so2'], no=r['no'], no2=r['no2'], o3=r['o3'], co=r['co'], pm10=r['pm10'], alert=alert)
@@ -52,6 +54,7 @@ def zone_to_districts (zone):
 
 def alarm_level(r):
     
+
     so2=float(r['so2']) if r['so2'] is not None else 0
     no=float(r['no']) if r['no'] is not None else 0
     no2=float(r['no2']) if r['no2'] is not None else 0

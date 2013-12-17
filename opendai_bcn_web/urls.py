@@ -29,7 +29,8 @@ import threading
 urlpatterns = patterns('',
     
     url(r'^$', views.index),
-    url(r'^pollution.geojson$', views.bcn_geojson),
+    url(r'^pollution.geojson$', views.pollution_geojson),
+    url(r'^pollution_async.geojson$', views.pollution_geojson_async),
     url(r'^weather$', views.weather_all),
     url(r'^traffic.geojson', views.traffic_lines_geojson),
     url(r'^traffic_async.geojson', views.traffic_lines_geojson_async),

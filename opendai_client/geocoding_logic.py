@@ -183,7 +183,7 @@ class GeoCodingLogic(object):
             f["geometry"] = json.loads(lstr.json)
             fc["features"].append(f)
         
-        logging.debug('Trafic GeoJson created')
+        logging.debug('Traffic GeoJson created')
         return fc
                 
         
@@ -192,7 +192,7 @@ class GeoCodingLogic(object):
         try:
             last_traffic = Traffic.objects.all().latest()
         except:
-            return {}
+            return self.get_traffic_geojson(None)
             
         last_date = last_traffic.datetime
         

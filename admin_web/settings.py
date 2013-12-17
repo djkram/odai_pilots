@@ -153,7 +153,7 @@ LEAFLET_CONFIG = {
             'js':  os.path.join(STATIC_URL, 'media/js/leaflet.awesome-markers.min.js')
             }
         },
-
+    'RESET_VIEW': False
 }
 
 # Celery Broker

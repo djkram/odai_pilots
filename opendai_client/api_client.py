@@ -145,6 +145,7 @@ class ApiClient(object):
         
         results = []
         
+        # iteration !!!
         for (point, stop) in product(points, all_stops):
             
             if (stop['geo'] == {"lat":point[1], "lng":point[0]}):
@@ -360,6 +361,17 @@ class ApiClient(object):
         
         result = self.geocoder.get_traffic_geojson_async()
         
+        return result
+    
+    
+    def get_streets_all(self):
+        r = requests.get(self.OPENDAI_URL + self.BCN_API + "streets/all"); 
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
         return result
         
     

@@ -12,7 +12,7 @@ class GeoCodingClient(object):
 
 
     def __init__(self):
-        self.g_geonames = geocoders.GeoNames()
+        self.g_geonames = geocoders.GeoNames(username='mplanaguma')
         self.g_google = geocoders.GoogleV3()
         self.g_bing = geocoders.Bing('Aoouq4D8UL3y9_QmnkA67qP7xvBiDVXWsMZbQ1OPlXWupph9AcA39Z2kltMawU2J')
         #Pending
