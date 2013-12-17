@@ -5,3 +5,6 @@ local_settings.py
 .pydevproject
 .project
 .settings
+.DS_Store
+celerybeat-schedule.db
+*.sqlite

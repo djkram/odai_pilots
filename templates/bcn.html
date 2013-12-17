@@ -173,8 +173,12 @@
 	            	style: style,
 	            	onEachFeature: function(feature, layer){
 	            		// 
-	            		layer.bindPopup('District: ' + feature.properties.Pollution.district + ' \n ' +
-	            						 'so2: ' + feature.properties.Pollution.so2);
+	            		layer.bindPopup('District: ' + feature.properties.Pollution.district + ' <br> ' +
+	            						 'so2: ' + feature.properties.Pollution.so2+ ' <br> ' +
+	            						 'no2: ' + feature.properties.Pollution.no2+ ' <br> ' +
+	            						 'o3: ' + feature.properties.Pollution.o3+ ' <br> ' +
+	            						 'co: ' + feature.properties.Pollution.co+ ' <br> ' +
+	            						 'pm10: ' + feature.properties.Pollution.pm10+ ' \n ');
 	            	}});
 	            
 	            controlLayer.addOverlay(geoJsonLayer, "Pollution");
