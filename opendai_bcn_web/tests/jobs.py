@@ -6,8 +6,31 @@ Replace this with more appropriate tests for your application.
 """
 
 from django.test import TestCase
-from opendai_bcn_web.bcn_jobs import traffic_job, noise_job
-from opendai_bcn_web.models import Traffic, Noise
+from opendai_bcn_web.bcn_jobs import traffic_job, noise_job, pollution_job
+from opendai_bcn_web.models import Traffic, Noise, Pollution
+
+
+class PollutionJobTest(TestCase):
+    
+    def setUp(self):
+        pass
+    
+    def test_pollution_job(self):
+        
+
+        print "Test Pollution job..."
+
+        pollution_job.get_pollution()
+        last_pollution_stored = Pollution.objects.all().latest()
+        
+        self.assertIsNotNone(last_pollution_stored, 'Not Stored Pollution!')
+        
+        district = '1'
+        d = Pollution.objects.filter(district=district).order_by('-datetime').latest()
+        
+        print d
+
+        pass
 
 
 class TrafficJobTest(TestCase):
@@ -47,5 +70,18 @@ class NoiseJobTest(TestCase):
         last_noise_stored = Noise.objects.all().latest()
         
         self.assertIsNotNone(last_noise_stored, 'Not Stored Traffic!')
+        
+        pass
+
+
+
+class ComparationJobTest(TestCase):
+    
+    def setUp(self):
+        pass  
+  
+    def test_job(self):
+        
+        
         
         pass

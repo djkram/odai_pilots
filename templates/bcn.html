@@ -62,11 +62,6 @@
 	
 	<script type="text/javascript">
 	
-		// punts
-		//var punt1 = L.marker([41.3850639, 2.1734035]).bindPopup('Punt 1');
-	    //var punt2 = L.marker([41.41338061238166, 2.198638916015625]).bindPopup('Punt 2');
-	    //var punts = L.layerGroup([punt1, punt2]);
-	    
 	    var minimal_style = 22677,
 	    	normal_style = 997,
 	    	midnight_style = 999;
@@ -92,39 +87,7 @@
 		var zoomControl = L.control.zoom({position:'bottomleft'});
 		zoomControl.addTo(map);
 		
-		/*
-		var map = L.map('map').setView([41.3850639, 2.1734035], 12);
-		
-		L.tileLayer('http://{s}.tile.cloudmade.com/BC9A493B41014CAABB98F0471D759707/997/256/{z}/{x}/{y}.png', {
-			maxZoom: 18,
-			attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>'
-		}).addTo(map);
-		*/
-		
-		/*
-		var map = L.map('map').setView([41.40239928924455,2.1941958212409003], 13);
 
-	    L.tileLayer('http://{s}.tile.cloudmade.com/{key}/{styleId}/256/{z}/{x}/{y}.png', {
-	        key: '32186e05680a4c8dacc22302bc6265c1',
-	        attribution: 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://cloudmade.com">CloudMade</a>',
-	        maxZoom: 18,
-	        styleId: 98834
-	    }).addTo(map);
-	    */
-	    
-	    // colors
-	    /*
-		function getColor(d) {
-		    return d > 1000 * 100 ? '#800026' :
-		           d > 500 * 100  ? '#BD0026' :
-		           d > 200 * 100  ? '#E31A1C' :
-		           d > 100 * 100  ? '#FC4E2A' :
-		           d > 50 * 100   ? '#FD8D3C' :
-		           d > 20 * 100   ? '#FEB24C' :
-		           d > 10 * 100   ? '#FED976' :
-		                      		'#FFEDA0';
-		}
-		*/
 		function getColor(d) {
 		    return d >= 2 ? '#800026' :
 		           d >= 1 ? '#FC4E2A' :
@@ -280,6 +243,8 @@
 	            console.log(error);
 	        }
 	    });
+	    
+	    
 
 		
 	</script>

@@ -29,7 +29,7 @@ class Traffic(models.Model):
     id_stretch = models.CharField(max_length=10, unique_for_date='datetime')
     description = models.CharField(max_length=1000, null=True)
     coordinates = models.CharField(max_length=5000, null=False)
-    status = models.CharField(max_length=10, null=False)
+    status = models.CharField(max_length=10, null=False) # [1 - 5]
     forecast = models.CharField(max_length=10, null=False)
     tstamp = models.CharField(max_length=20, null=False)
     

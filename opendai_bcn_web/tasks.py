@@ -19,7 +19,7 @@ def process_pollution():
     pollution_job.get_pollution()
     return True
 
-@periodic_task(run_every=datetime.timedelta(hours=12))
+@periodic_task(run_every=datetime.timedelta(minutes=30))
 def cron_process_pollution():
     logging.info("Periodic Pollution task executed!")
     pollution_job.get_pollution()
@@ -28,5 +28,11 @@ def cron_process_pollution():
 @task(name='process_traffic')
 def process_traffic():
     logging.info("Traffic task executed!")
+    traffic_job.get_trafic()
+    return True
+
+@periodic_task(run_every=datetime.timedelta(minutes=15))
+def cron_process_traffic():
+    logging.info("Periodic Traffic task executed!")
     traffic_job.get_trafic()
     return True
