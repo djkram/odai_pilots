@@ -19,8 +19,8 @@ MANAGERS = ADMINS
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'. django.contrib.gis.db.backends.spatialite
-        'NAME': os.path.join(PROJECT_ROOT, '../opendai.sqlite'),   # Or path to database file if using sqlite3.
+        'ENGINE': 'django.contrib.gis.db.backends.spatialite', #'django.db.backends.sqlite3', # Add 'postgresql_psycopg2', 'mysql', 'sqlite3' or 'oracle'. django.contrib.gis.db.backends.spatialite
+        'NAME': os.path.join(PROJECT_ROOT, 'geodjango.db'), #'../opendai.sqlite'),   # Or path to database file if using sqlite3.
         'USER': '',                      # Not used with sqlite3.
         'PASSWORD': '',                  # Not used with sqlite3.
         'HOST': '',                      # Set to empty string for localhost. Not used with sqlite3.
@@ -28,7 +28,7 @@ DATABASES = {
     }
 }
 
-#SPATIALITE_LIBRARY_PATH='/Library/Frameworks/SQLite3.framework/SQLite3'
+SPATIALITE_LIBRARY_PATH='/Library/Frameworks/SQLite3.framework/SQLite3'
 
 # Local time zone for this installation. Choices can be found here:
 # http://en.wikipedia.org/wiki/List_of_tz_zones_by_name
