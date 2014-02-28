@@ -105,34 +105,33 @@ def weather_all(request):
     sym_afternoon = None
     
     # Parsing: "Dc25-09: Temp.màx. 24 ºC Temp.mín. 18 ºC / Matí mig ennuvolat / Tarda mig ennuvolat"
+    #        p = "([0-9][0-9])-*"
+    #    l = re.findall(p,d)
+    #    
+    #    p2 = '(?<=..)\w+'
+    #    l2 = re.findall(p2,d)
+    #    
+    #    t_day = l[0] # Dc25-09
+    #    t_month = l[1] # Dc25-09
+    #    t_max = l2[5] # 24 ºC 
+    #    t_min = l2[10] # 18 ºC
+    
     for o in result_all:
-        d = o['description']
         
-        p = "([0-9][0-9])-*"
-        l = re.findall(p,d)
+        t = o['title']
         
-        p2 = '(?<=..)\w+'
-        l2 = re.findall(p2,d)
+        if t == "min_max_temp":
+            d = o['description']
+            d_list = d.split()
+            t_max = d_list[0]
+            t_min = d_list[2]
         
-        t_day = l[0] # Dc25-09
-        t_month = l[1] # Dc25-09
-        t_max = l2[5] # 24 ºC 
-        t_min = l2[10] # 18 ºC
-
+        if t == "morning_link":
+            sym_moring = o['link']
+            
+        if t == "afternoon_link":
+            sym_afternoon = o['link']
         
-        if int(t_day) == datetime.datetime.today().day and int(t_month) == datetime.datetime.today().month:
-            link = o['link']
-            path = link.replace(link.split('/')[-1],'')
-            r  = requests.get(link)
-            soup = BeautifulSoup(r.text)
-            div_content =  soup.find(id="FW_content")
-            imgs = div_content.find_all('img')
-            link.split('/')[-1]
-            sym_moring = path + str(imgs[0]['src'])
-            sym_afternoon = path + imgs[1]['src']
-            break
-        else:
-            continue
         
     result = {"max": t_max, "min": t_min, "prediction":{"morning": sym_moring, "afternoon": sym_afternoon}}
     
