@@ -27,7 +27,7 @@ def get_pollution():
         
         for r in result_by_id:
             
-            if r['hour'] == 'Màxima':
+            if 'xima' in r['hour']:
                 
                 districts = zone_to_districts(zone)
                 
