@@ -30,13 +30,16 @@ def get_pollution():
                 districts = zone_to_districts(zone)
                 
                 for d in districts:
-                    logging.error("storing result for district : " + d)
+                    logging.info("storing result for district : " + d)
+                    print("storing result for district : " + d)
                     #alert = alarm_level_fake(r)
                     alert = alarm_level(r)
-                    logging.warn(alert)
+                    logging.info( alert)
+                    print(alert)
                     
                     p = Pollution(district= d, so2=r['so2'], no=r['no'], no2=r['no2'], o3=r['o3'], co=r['co'], pm10=r['pm10'], alert=alert)
                     p.save()
+                    print("Stored!")
             
             
 def zone_to_districts (zone):
