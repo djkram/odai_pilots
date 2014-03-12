@@ -165,7 +165,7 @@ BROKER_USER = "admin"
 BROKER_PASSWORD = "20272027"
 BROKER_VHOST = "testhost"
 CELERY_SEND_TASK_SENT_EVENT = True
-#CELERY_ALWAYS_EAGER = True
+CELERY_ALWAYS_EAGER = True
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
