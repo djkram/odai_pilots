@@ -15,6 +15,8 @@ client = ApiClient()
 
 def get_pollution():
     
+    print("Getting pollution!")
+    
     result_all = client.get_pollution_all()
     #print result_all
     
