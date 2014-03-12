@@ -58,6 +58,9 @@ def pollution_geojson(request):
 def pollution_geojson_async(request):
     
     deprecate_date = timedelta (minutes = 10)
+    
+    q = shapefiles.bcn_geojson()
+        
     try:
         last = Pollution.objects.all().latest()
         
@@ -75,20 +78,17 @@ def pollution_geojson_async(request):
             #print "Running task"
             logging.debug(running_task.ready())
         
+        for f in q.features:
+            district = f.properties['District']
+            
+            d = Pollution.objects.filter(district=district).order_by('-datetime').latest()
+            
+            # Adding pollution Data
+            f.properties['Pollution'] = model_to_dict(d)
+        
     except ObjectDoesNotExist:
         # Empty DB
         pollution_job.get_pollution()
-        
-    
-    q = shapefiles.bcn_geojson()
-    
-    for f in q.features:
-        district = f.properties['District']
-        
-        d = Pollution.objects.filter(district=district).order_by('-datetime').latest()
-        
-        # Adding pollution Data
-        f.properties['Pollution'] = model_to_dict(d)
         
     json = geojson.dumps(q)
     
