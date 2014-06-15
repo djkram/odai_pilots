@@ -15,6 +15,8 @@ client = ApiClient()
 
 def get_pollution():
     
+    print("Getting pollution!")
+    
     result_all = client.get_pollution_all()
     #print result_all
     
@@ -25,18 +27,21 @@ def get_pollution():
         
         for r in result_by_id:
             
-            if r['hour'] == 'Màxima':
+            if 'xima' in r['hour']:
                 
                 districts = zone_to_districts(zone)
                 
                 for d in districts:
                     logging.info("storing result for district : " + d)
+                    #print("storing result for district : " + d)
                     #alert = alarm_level_fake(r)
                     alert = alarm_level(r)
                     logging.info( alert)
+                    #print(alert)
                     
                     p = Pollution(district= d, so2=r['so2'], no=r['no'], no2=r['no2'], o3=r['o3'], co=r['co'], pm10=r['pm10'], alert=alert)
                     p.save()
+                    #print("Stored!")
             
             
 def zone_to_districts (zone):
@@ -65,7 +70,7 @@ def alarm_level(r):
     if so2 > 350 or no > 240 or no2 > 240 or o3 > 180 or co > 10 or pm10 > 50 :
         return 2
     
-    if so2 >= 201 or no >= 116 or no2 >= 116 or o3 >= 111 or co >= 7 or pm10 >= 36 :
+    if so2 >= 201 or no >= 116 or no2 >= 116 or o3 >= 90 or co >= 7 or pm10 >= 36 :
         return 1 
     
     return 0

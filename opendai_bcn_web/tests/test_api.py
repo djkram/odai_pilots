@@ -8,8 +8,11 @@ Replace this with more appropriate tests for your application.
 from django.test import TestCase
 
 from opendai_bcn_web.models import Pollution
+from opendai_bcn_web import views
 from opendai_client.geocoding_logic import GeoCodingLogic
 from opendai_client.api_client import ApiClient
+
+import json
 
 class BCNAPITest(TestCase):
     
@@ -37,10 +40,26 @@ class BCNAPITest(TestCase):
 #===============================================================================
         
     
-    def test_traffic(self):
-        c = ApiClient()
-        result = c.get_bcn_traffic_current()
+    #===========================================================================
+    # def test_traffic(self):
+    #    c = ApiClient()
+    #    result = c.get_bcn_traffic_current()
+    #    
+    #    self.assertIsNotNone(result, 'Not Result!')
+    #===========================================================================
+         
+         
+    def test_weather(self):
+        
+        result = views.weather_all(None)
         
         self.assertIsNotNone(result, 'Not Result!')
-         
+        
+        o_result = json.loads(result.content)
+        self.assertTrue(o_result['max'].isdigit(), 'no max parsed')
+        self.assertTrue(o_result['min'].isdigit(), 'no max parsed')
+        
+    
+        pass
+        
         

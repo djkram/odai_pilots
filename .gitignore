@@ -7,4 +7,7 @@ local_settings.py
 .settings
 .DS_Store
 celerybeat-schedule.db
+celerybeat-schedule
 *.sqlite
+*.backup
+
