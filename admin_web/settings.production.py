@@ -168,7 +168,7 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672/' #RabbiMQ
 #BROKER_USER = "admin"
 #BROKER_PASSWORD = "20272027"
 #BROKER_VHOST = "testhost"
-CELERY_SEND_TASK_SENT_EVENT = True
+#CELERY_SEND_TASK_SENT_EVENT = True
 #CELERY_ALWAYS_EAGER = True
 
 # A sample logging configuration. The only tangible logging
