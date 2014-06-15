@@ -8,7 +8,7 @@ djcelery.setup_loader()
 # Project Path
 PROJECT_ROOT = os.path.dirname(__file__) #gets directory settings is in
 
-DEBUG = True
+DEBUG = False
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
