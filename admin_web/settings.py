@@ -134,7 +134,7 @@ INSTALLED_APPS = (
     # Uncomment the next line to enable admin documentation:
     'django.contrib.admindocs',
     # 3rd party Apps
-    'leaflet',
+    #'leaflet',
     # Delery scheduling
     'kombu.transport.django',
     'djcelery',
@@ -143,6 +143,7 @@ INSTALLED_APPS = (
     'opendai_bcn_web',
     'opendai_lleida_web',
 )
+
 
 LEAFLET_CONFIG = {
     # conf here
