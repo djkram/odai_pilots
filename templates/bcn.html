@@ -50,7 +50,14 @@
     	}
 	</style>
 	
-	<script src="http://code.jquery.com/jquery-1.10.1.min.js" type="application/javascript"></script>
+	<!-- jQuery UI  10 Basic --> 
+	<script src="../static/media/jquery-ui-1.10.3.custom/js/jquery-1.9.1.js" type="application/javascript"></script>
+	<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.basic/css/redmond/jquery-ui-1.10.3.custom.css">
+	<script src="../static/media/jquery-ui-1.10.3.basic/js/jquery-ui-1.10.3.custom.js" type="application/javascript"></script>
+	<!-- jQuery UI Pluguins -->
+	<link rel="stylesheet" href="../static/media/jquery-ui-1.10.3.custom/plugins/themes/base/jquery.ui.selectmenu.css">
+	<script src="../static/media/jquery-ui-1.10.3.custom/plugins/ui/jquery.ui.selectmenu.js" type="application/javascript"></script>   
+	<script src="../static/media/jquery-ui-1.10.3.custom/plugins/jQuery.Spin.js" type="application/javascript"></script>  
     
 {% endblock %}
 
@@ -62,6 +69,7 @@
 	
 	<script type="text/javascript">
 	
+		/*
 	    var minimal_style = 22677,
 	    	normal_style = 997,
 	    	midnight_style = 999;
@@ -75,19 +83,30 @@
 		var minimal = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: minimal_style, attribution: cloudmadeAttribution}),
 			normal = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: normal_style, attribution: cloudmadeAttribution}),
 			midnight  = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: midnight_style,   attribution: cloudmadeAttribution});
+		*/
+			
+			// MapBox Tile Provider	
+			var mapboxeUrl = 'https://a.tiles.mapbox.com/v3/mplanaguma.ifj390dn/{z}/{x}/{y}.png',
+				mpaboxAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.mapbox.com/about/maps/">MapBox</a>';
+			
+			var mapboxTiles = L.tileLayer(mapboxeUrl,{attribution:mpaboxAttribution});
+			
+			// OSM Tile Provider	
+			var	osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+				osmAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
+			
+			var osmTiles = L.tileLayer(osmUrl,{attribution:osmAttribution});
 		
 		var map = L.map('map', {
 			    center: new L.LatLng(41.3850639, 2.1734035),
     			zoom: 12,
-    			layers: [minimal],
+    			layers: [mapboxTiles],
     			zoomControl: false
-			
 		});
-	
+		
 		var zoomControl = L.control.zoom({position:'bottomleft'});
 		zoomControl.addTo(map);
 		
-
 		function getColor(d) {
 		    return d >= 2 ? '#800026' :
 		           d >= 1 ? '#FC4E2A' :
@@ -107,9 +126,8 @@
 		
 	    // controls
 		var baseMaps = {
-		    "Minimal": minimal,
-		    "Normal": normal,
-		    "Night View": midnight
+		    "OSM": osmTiles,
+		    "MapBox": mapboxTiles
 		};
 		
 		var overlayMaps = {
@@ -118,6 +136,54 @@
 		
 		var controlLayer = L.control.layers(baseMaps, overlayMaps, {position:'bottomright'});
 		controlLayer.addTo(map);
+		
+		/*
+		// Menu Overlay
+		// ------------
+		var menu = L.control({position: 'topleft'});
+			
+			menu.onAdd = function (map) {
+
+		    	this._div = L.DomUtil.create('div', 'info menu');
+		    	this._div.innerHTML += "<div id='accordion'>"
+		    	+ "<h3>Pollution</h3><div id='menu-pois'></div>"
+		    	+ "<h3>Traffic</h3><div id='menu-bus'></div>"
+		    	//+ "<h3>Alerts</h3><div id='menu-alert'></div>"
+		    	+ "</div>";
+
+		    	this.update();
+		        //div.innerHTML += "<div style='background-color:orange;height:300px;width:100px;'>This div has height and width applied.</div>";
+		
+		    	return this._div;
+			};
+			
+			// HACK to disable the mouse control to the map over the menu
+			//Functions to ei'her disable (onmouseover) or enable (onmouseout) the map's dragging
+			function controlEnter(e) {
+			    map.dragging.disable();
+			    map.doubleClickZoom.disable();
+	
+			}
+			function controlLeave() {
+			    map.dragging.enable();
+			    map.doubleClickZoom.enable();
+			}
+			
+						// Fuction to add content on the menu
+			menu.update = function (props) {
+						
+				var div = $(this._div);		    
+		    	var accordion = div.children();
+		    	accordion.accordion({heightStyle: "content"});
+		    	
+		    	//Quick application of event handlers to overall control
+		    	accordion.mouseover(controlEnter);
+		    	accordion.mouseout(controlLeave);
+		   };
+		
+		menu.addTo(map);	
+		// -------------
+		*/
 		
 		var neighborhoods = [];
 		var geoJsonLayer;
