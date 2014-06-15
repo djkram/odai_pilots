@@ -14,4 +14,4 @@ cd /var/www/odai_pilots
 #source ../env/bin/activate
 
 test -d $LOGDIR || mkdir -p $LOGDIR
-exec python manage.py celery worker -l INFO 2>>$LOGFILE
+exec python2.7 manage.py celery worker -B -l INFO 2>>$LOGFILE
