@@ -3,8 +3,13 @@
 {% block load %}{% load leaflet_tags %}{% endblock %}
 
 {% block head %}
+<!--
 	{% leaflet_js plugins="ALL" %}
     {% leaflet_css plugins="ALL" %}
+-->
+
+	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
+    <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
 
 <!-- Bootstrap -->    
 <link rel="stylesheet" href="../static/media/bootstrap/css/bootstrap.min.css">
