@@ -8,7 +8,7 @@ djcelery.setup_loader()
 # Project Path
 PROJECT_ROOT = os.path.dirname(__file__) #gets directory settings is in
 
-DEBUG = False
+DEBUG = True
 TEMPLATE_DEBUG = DEBUG
 
 ADMINS = (
@@ -161,7 +161,7 @@ LEAFLET_CONFIG = {
 }
 
 # Celery Broker
-BROKER_URL = 'amqp://guest:guest@localhost:5672/' #RabbiMQ
+#BROKER_URL = 'amqp://guest:guest@localhost:5672/' #RabbiMQ
 #BROKER_URL = 'django://' #Django ORM
 #BROKER_HOST = "localhost"
 #BROKER_PORT = 5672
@@ -169,14 +169,13 @@ BROKER_URL = 'amqp://guest:guest@localhost:5672/' #RabbiMQ
 #BROKER_PASSWORD = "20272027"
 #BROKER_VHOST = "testhost"
 #CELERY_SEND_TASK_SENT_EVENT = True
-#CELERY_ALWAYS_EAGER = True
+CELERY_ALWAYS_EAGER = True
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
 # the site admins on every HTTP 500 error when DEBUG=False.
 # See http://docs.djangoproject.com/en/dev/topics/logging for
 # more details on how to customize your logging configuration.
-'''
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -274,3 +273,4 @@ LOGGING = {
         }
     }
 }
+'''

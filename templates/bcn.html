@@ -1,11 +1,18 @@
 {% extends "base.html" %}
 
+{% block load %}{% load leaflet_tags %}{% endblock %}
+
 {% block title %}BCN OpenDAI Pilot{% endblock %}
 
 {% block head %}
+
+	{% leaflet_js plugins="ALL" %}
+    {% leaflet_css plugins="ALL" %}
 	
+	<!--
 	<link rel="stylesheet" href="http://cdn.leafletjs.com/leaflet-0.5/leaflet.css" />
     <script src="http://cdn.leafletjs.com/leaflet-0.5/leaflet.js"></script>
+   -->
     
     <style>
 		body {
@@ -65,9 +72,11 @@
 
 
 	<div id="logo"><img src='../static/media/images/open-dai-logo-for-web-bottom.png' style="width:400px"/></div>
-	<div id="map"></div>
+	{% leaflet_map "map" %}
 	
 	<script type="text/javascript">
+	
+	function mapInit(map, bounds) {
 	
 		/*
 	    var minimal_style = 22677,
@@ -85,25 +94,23 @@
 			midnight  = L.tileLayer(cloudmadeUrl, {key: kram_key, styleId: midnight_style,   attribution: cloudmadeAttribution});
 		*/
 			
-			// MapBox Tile Provider	
-			var mapboxeUrl = 'https://a.tiles.mapbox.com/v3/mplanaguma.ifj390dn/{z}/{x}/{y}.png',
-				mpaboxAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.mapbox.com/about/maps/">MapBox</a>';
-			
-			var mapboxTiles = L.tileLayer(mapboxeUrl,{attribution:mpaboxAttribution});
-			
-			// OSM Tile Provider	
-			var	osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
-				osmAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
-			
-			var osmTiles = L.tileLayer(osmUrl,{attribution:osmAttribution});
+		// MapBox Tile Provider	
+		var mapboxeUrl = 'https://a.tiles.mapbox.com/v3/mplanaguma.ifj390dn/{z}/{x}/{y}.png',
+			mpaboxAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>, Imagery © <a href="http://www.mapbox.com/about/maps/">MapBox</a>';
 		
-		var map = L.map('map', {
-			    center: new L.LatLng(41.3850639, 2.1734035),
-    			zoom: 12,
-    			layers: [mapboxTiles],
-    			zoomControl: false
-		});
+		var mapboxTiles = L.tileLayer(mapboxeUrl,{attribution:mpaboxAttribution});
 		
+		// OSM Tile Provider	
+		var	osmUrl = 'http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',
+			osmAttribution = 'Map data &copy; <a href="http://openstreetmap.org">OpenStreetMap</a> contributors, <a href="http://creativecommons.org/licenses/by-sa/2.0/">CC-BY-SA</a>';
+		
+		var osmTiles = L.tileLayer(osmUrl,{attribution:osmAttribution});
+		
+		map.setView([41.3850639, 2.1734035], 12);
+		map.addLayer(mapboxTiles);
+		
+		// moving defalt zoom
+		$('.leaflet-control-zoom').hide()
 		var zoomControl = L.control.zoom({position:'bottomleft'});
 		zoomControl.addTo(map);
 		
@@ -137,7 +144,6 @@
 		var controlLayer = L.control.layers(baseMaps, overlayMaps, {position:'bottomright'});
 		controlLayer.addTo(map);
 		
-		/*
 		// Menu Overlay
 		// ------------
 		var menu = L.control({position: 'topleft'});
@@ -146,8 +152,8 @@
 
 		    	this._div = L.DomUtil.create('div', 'info menu');
 		    	this._div.innerHTML += "<div id='accordion'>"
-		    	+ "<h3>Pollution</h3><div id='menu-pois'></div>"
-		    	+ "<h3>Traffic</h3><div id='menu-bus'></div>"
+		    	+ "<h3>Pollution</h3><div id='menu-pollution'></div>"
+		    	+ "<h3>Traffic</h3><div id='menu-traffic'></div>"
 		    	//+ "<h3>Alerts</h3><div id='menu-alert'></div>"
 		    	+ "</div>";
 
@@ -169,21 +175,24 @@
 			    map.doubleClickZoom.enable();
 			}
 			
-						// Fuction to add content on the menu
+			// Fuction to add content on the menu
 			menu.update = function (props) {
 						
-				var div = $(this._div);		    
-		    	var accordion = div.children();
-		    	accordion.accordion({heightStyle: "content"});
-		    	
-		    	//Quick application of event handlers to overall control
-		    	accordion.mouseover(controlEnter);
-		    	accordion.mouseout(controlLeave);
+			var div = $(this._div);		    
+	    	var accordion = div.children();
+	    	accordion.accordion({heightStyle: "content"});
+	    	
+	    	//Quick application of event handlers to overall control
+	    	accordion.mouseover(controlEnter);
+	    	accordion.mouseout(controlLeave);
+	    	
+	    	// Menus
+	    	var menu_pollution = div.find('#menu-pollution');
+	    	
 		   };
 		
 		menu.addTo(map);	
 		// -------------
-		*/
 		
 		var neighborhoods = [];
 		var geoJsonLayer;
@@ -310,7 +319,7 @@
 	        }
 	    });
 	    
-	    
+	  } // InitMap  
 
 		
 	</script>

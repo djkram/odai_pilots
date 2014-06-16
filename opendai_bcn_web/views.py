@@ -22,7 +22,6 @@ import os
 import re
 import requests
 
-
 #import datetime
 #import logging
 #from shapely.geometry import asShape
@@ -95,6 +94,33 @@ def pollution_geojson_async(request):
     st = 200
     mimetype = 'application/json'
     return HttpResponse(json, mimetype, st)
+
+
+def pollution_historic(request):
+    
+    all = Pollution.objects.all().order_by('-datetime')
+    
+    result = {'historic' : []}
+    
+    for pollution in all:
+        result['historic'].append({str(pollution.datetime) : model_to_dict(pollution)});
+        
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result), mimetype, st)
+
+def pollution_days(request):
+    
+    all_days = Pollution.objects.datetimes('datetime','month','DESC')
+    
+    result = {'days' : []}
+    
+    for day in all_days:
+        result['days'].append(str(day));
+        
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result), mimetype, st)
 
 def weather_all(request):
     
