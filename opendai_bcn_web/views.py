@@ -111,7 +111,7 @@ def pollution_historic(request):
 
 def pollution_days(request):
     
-    all_days = Pollution.objects.datetimes('datetime','month','DESC')
+    all_days = Pollution.objects.datetimes('datetime','day','DESC')
     
     result = {'days' : []}
     

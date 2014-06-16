@@ -2,10 +2,7 @@
 
 {% block load %}{% load leaflet_tags %}{% endblock %}
 
-{% block title %}BCN OpenDAI Pilot{% endblock %}
-
 {% block head %}
-
 	{% leaflet_js plugins="ALL" %}
     {% leaflet_css plugins="ALL" %}
 	
@@ -67,6 +64,8 @@
 	<script src="../static/media/jquery-ui-1.10.3.custom/plugins/jQuery.Spin.js" type="application/javascript"></script>  
     
 {% endblock %}
+
+{% block title %}BCN OpenDAI Pilot{% endblock %}
 
 {% block body %}
 
