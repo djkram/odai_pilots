@@ -221,6 +221,29 @@ def traffic_days(request):
     mimetype = 'application/json'
     return HttpResponse(json.dumps(result), mimetype, st)
 
+
+# Client API OpenDAI
+def pollution_zone_all(request):
+    result_all = client.get_bcn_pollution_zone_all()
+    
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result_all), mimetype, st)
+
+def pollution_zone_id(request, id):
+    result_all = client.get_bcn_pollution_zone_id(id)
+    
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result_all), mimetype, st)
+
+def polen_all(request):
+    result_all = client.get_bcn_polen_all()
+    
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result_all), mimetype, st)
+
 #===============================================================================
 # class TestGeoLayer(GeoJSONLayerView):
 #    model = TestGeo

@@ -373,5 +373,35 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         return result
-        
     
+    
+    def get_bcn_pollution_zone_all(self):
+        r = requests.get(self.OPENDAI_URL + self.BCN_API + "pollution/zone/all"); 
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        return result
+    
+    def get_bcn_pollution_zone_id(self, id):
+        r = requests.get(self.OPENDAI_URL + self.BCN_API + "pollution/zone/" + id); 
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        return result
+        
+    def get_bcn_polen_all(self):
+        r = requests.get(self.OPENDAI_URL + self.BCN_API + "polen/all"); 
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        return result
+        
