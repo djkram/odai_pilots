@@ -25,7 +25,7 @@ def process_traffic():
     traffic_job.get_trafic()
     return True
 
-@periodic_task(run_every=datetime.timedelta(minutes=15))
+@periodic_task(run_every=(crontab(minute=0, hour='*')))
 def cron_process_pollution():
     logging.info("Periodic Pollution task executed!")
     pollution_job.get_pollution()

@@ -170,6 +170,7 @@ LEAFLET_CONFIG = {
 #BROKER_VHOST = "testhost"
 #CELERY_SEND_TASK_SENT_EVENT = True
 CELERY_ALWAYS_EAGER = True
+CELERY_TIMEZONE = TIME_ZONE
 
 # A sample logging configuration. The only tangible logging
 # performed by this configuration is to send an email to
