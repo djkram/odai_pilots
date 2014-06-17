@@ -14,8 +14,14 @@ framework.
 
 """
 import os
+import sys
 
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "settings.production")
+PROJECT_PATH = os.path.dirname(__file__)
+path = PROJECT_PATH + '../'
+if path not in sys.path:
+   sys.path.append(path)
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "admin_web.settings.production")
 
 # This application object is used by any WSGI server configured to use this
 # file. This includes Django's development server, if the WSGI_APPLICATION
