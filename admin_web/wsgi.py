@@ -17,7 +17,7 @@ import os
 import sys
 
 PROJECT_PATH = os.path.dirname(__file__)
-path = PROJECT_PATH + '../'
+path = PROJECT_PATH + '/../'
 if path not in sys.path:
     sys.path.append(path)
 
