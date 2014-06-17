@@ -14,6 +14,6 @@ cd /var/www/odai_pilots
 #source ../env/bin/activate
 
 test -d $LOGDIR || mkdir -p $LOGDIR
-exec gunicorn -w $NUM_WORKERS \
+exec gunicorn admin_web.wsgi:application -w $NUM_WORKERS \
 	--user=$USER --group=$GROUP --log-level=info \
     --log-file=$LOGFILE -b 0.0.0.0:8001 2>>$LOGFILE
