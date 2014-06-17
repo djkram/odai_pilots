@@ -207,6 +207,20 @@ def traffic_lines_geojson_async(request):
     mimetype = 'application/json'
     return HttpResponse(json.dumps(result_all), mimetype, st)
 
+
+def traffic_days(request):
+    
+    all_days = Traffic.objects.datetimes('datetime','day','DESC')
+    
+    result = {'days' : []}
+    
+    for day in all_days:
+        result['days'].append(str(day));
+        
+    st = 200
+    mimetype = 'application/json'
+    return HttpResponse(json.dumps(result), mimetype, st)
+
 #===============================================================================
 # class TestGeoLayer(GeoJSONLayerView):
 #    model = TestGeo
