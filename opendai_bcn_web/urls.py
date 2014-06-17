@@ -36,6 +36,7 @@ urlpatterns = patterns('',
     url(r'^weather$', views.weather_all),
     url(r'^traffic.geojson', views.traffic_lines_geojson),
     url(r'^traffic_async.geojson', views.traffic_lines_geojson_async),
+    url(r'^traffic_days$', views.traffic_days),
     
     #url(r'^data.geojson$', TestGeoLayer.as_view(model=TestGeo), name='data'),
     
