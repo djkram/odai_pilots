@@ -164,6 +164,17 @@ class ApiClient(object):
         
         result = payload['data']['entry']
         
+        return result
+    
+    def get_lleida_buslines_all_geojson(self):
+        r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "datapublication/buslines/all/");
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        
         return self.geocoder.get_bus_line_geojson(result)
         
         
@@ -255,6 +266,17 @@ class ApiClient(object):
         
         return result
     
+    def get_lleida_accessibility_by_category_all(self):
+        r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "accessibility/accservs/category/all");
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
+        
+        return result
+    
     def get_lleida_accessibility_by_category_id(self, id):
         r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "accessibility/accservs/category/" + id);
         payload = r.json()
@@ -270,6 +292,17 @@ class ApiClient(object):
             place, (lat, lng) = self.geocoder.get_lat_lon_by_street_async(street, self.LLEIDA, self.BB_LLEIDA)
                     
             result[index]['geo'] = {'lat' : lat, 'lng' : lng}
+        
+        return result
+
+    def get_lleida_accessibility_by_feature_all(self):
+        r = requests.get(self.OPENDAI_URL + self.LLEIDA_API + "accessibility/accservs/feature/all");
+        payload = r.json()
+        
+        if payload['meta']['code'] != 200 :
+            return {'error': payload['meta']['code']}
+        
+        result = payload['data']['entry']
         
         return result
     

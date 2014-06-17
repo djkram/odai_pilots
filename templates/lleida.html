@@ -205,7 +205,7 @@
 			// Load Category 1 as default
 			$.ajax({
 				type: "GET",
-				url: "pois/1/",
+				url: "api/pois/1/",
 				success: function(data){
 					
 					poiss.clearLayers()
@@ -238,7 +238,7 @@
 				
 				$.ajax({
 				type: "GET",
-				url: "pois/" + id + "/",
+				url: "api/pois/" + id,
 				success: function(data){
 					
 					poiss.clearLayers()
@@ -281,7 +281,7 @@
 		
 			$.ajax({
 				type: "GET",
-				url: "bustop/all",
+				url: "api/bustop/all",
 				success: function(data){
 			
 					for (var i=0; i < data.length; i++) {
@@ -317,7 +317,7 @@
 			// Load defalut Alert view
 			$.ajax({
 				type: "GET",
-				url: "alert/" + "2/",
+				url: "api/alert/" + "2",
 				success: function(data){
 			
 					for (var i=0; i < data.length; i++) {
@@ -350,7 +350,7 @@
 				
 				$.ajax({
 				type: "GET",
-				url: "alert/" + days + "/",
+				url: "api/alert/" + days,
 				success: function(data){
 					
 					alerts.clearLayers()
@@ -398,7 +398,7 @@
 			// Lines Layer
 			$.ajax({
 				type: "GET",
-				url: "buslines.geojson",
+				url: "api/buslines.geojson",
 				success: function(buslines_geojson, textStatus, jqXHR){
 					
 					busLines.addData(buslines_geojson);
@@ -486,7 +486,7 @@
 		    			    	
 				$.ajax({
 					type: "GET",
-					url: "pois/category/all",
+					url: "api/pois/category/all",
 					success: function(data){
 				
 						var selectHTML = "<p><div class='make-switch' id='switch-poi' data-on='info' data-off='danger'>";
