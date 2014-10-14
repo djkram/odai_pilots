@@ -142,7 +142,7 @@
 		
 		var controlLayer = L.control.layers(baseMaps, overlayMaps, {position:'bottomright'});
 		controlLayer.addTo(map);
-		
+/*		
 		// Menu Overlay
 		// ------------
 		var menu = L.control({position: 'topleft'});
@@ -192,6 +192,7 @@
 		
 		menu.addTo(map);	
 		// -------------
+*/
 		
 		var neighborhoods = [];
 		var geoJsonLayer;
@@ -294,7 +295,7 @@
 		
 	    $.ajax({
 	        type: "GET",
-	        url: "traffic_async.geojson",
+	        url: "traffic.geojson",
 	        success: function(bcnMap, textStatus, jqXHR){
 	        	
 	            var features = bcnMap.features;
